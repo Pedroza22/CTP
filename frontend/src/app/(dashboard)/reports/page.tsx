@@ -93,7 +93,7 @@ export default function ReportsPage() {
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 -mt-10 -mr-10 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 -mb-10 -ml-10 h-48 w-48 bg-purple-500/20 rounded-full blur-2xl" />
-      </div>
+      </motion.div>
     </div>
   );
 }
