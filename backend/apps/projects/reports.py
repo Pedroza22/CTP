@@ -4,7 +4,6 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from openpyxl import Workbook
 from .models import Project
-from apps.tasks.models import Task
 
 def generate_project_pdf(project):
     buffer = io.BytesIO()
@@ -16,7 +15,7 @@ def generate_project_pdf(project):
     p.setFont("Helvetica", 12)
     p.drawString(100, 730, f"Status: {project.status}")
     p.drawString(100, 715, f"Start Date: {project.start_date}")
-    p.drawString(100, 700, f"End Date: {project.end_date}")
+    p.drawString(100, 700, f"End Date: {project.end_date if project.end_date else 'N/A'}")
     p.drawString(100, 685, f"Description: {project.description[:100]}...")
     
     p.setFont("Helvetica-Bold", 14)
@@ -29,7 +28,7 @@ def generate_project_pdf(project):
         if y < 50:
             p.showPage()
             y = 750
-        p.drawString(120, y, f"- {task.title} ({task.status}) - Due: {task.due_date}")
+        p.drawString(120, y, f"- {task.title} ({task.status}) - Due: {task.due_date if task.due_date else 'No date'}")
         y -= 15
         
     p.showPage()
@@ -47,7 +46,7 @@ def generate_project_excel(project):
     ws.append(["Project Name", project.name])
     ws.append(["Status", project.status])
     ws.append(["Start Date", project.start_date])
-    ws.append(["End Date", project.end_date])
+    ws.append(["End Date", project.end_date if project.end_date else "N/A"])
     ws.append([])
     
     ws.append(["Task ID", "Title", "Status", "Priority", "Due Date", "Assigned To"])
@@ -55,11 +54,11 @@ def generate_project_excel(project):
     tasks = project.tasks.all()
     for task in tasks:
         ws.append([
-            task.id, 
+            str(task.id), 
             task.title, 
             task.status, 
             task.priority, 
-            task.due_date, 
+            task.due_date.strftime("%Y-%m-%d %H:%M") if task.due_date else "N/A", 
             task.assigned_to.email if task.assigned_to else "Unassigned"
         ])
     
