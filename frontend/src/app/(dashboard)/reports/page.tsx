@@ -1,10 +1,31 @@
 'use client';
 
-import { FileText, FileSpreadsheet, Download, TrendingUp, BarChart3, PieChart } from 'lucide-react';
+import { FileText, FileSpreadsheet, TrendingUp, BarChart3, PieChart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
+import api from '@/lib/api';
 
 export default function ReportsPage() {
+  const downloadReport = async (type: 'pdf' | 'excel', reportName: string) => {
+    try {
+      const endpoint = type === 'pdf' ? '/reports/pdf/' : '/reports/excel/';
+      const response = await api.get(endpoint, {
+        responseType: 'blob',
+        params: { report: reportName }
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `reporte-${reportName.toLowerCase().replace(/\s+/g, '-')}.${type === 'pdf' ? 'pdf' : 'xlsx'}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Error descargando el reporte:', error);
+      alert('Error al generar el reporte. Asegúrate de que el backend esté disponible.');
+    }
+  };
   const reports = [
     {
       title: 'Resumen Ejecutivo',
@@ -57,6 +78,7 @@ export default function ReportsPage() {
             <div className="grid grid-cols-2 gap-4 mt-auto">
               <Button 
                 variant="outline" 
+                onClick={() => downloadReport('pdf', report.title)}
                 className="rounded-2xl border-2 flex items-center justify-center gap-2 group/btn hover:border-red-500 hover:text-red-500 transition-all"
               >
                 <FileText className="h-4 w-4" />
@@ -64,6 +86,7 @@ export default function ReportsPage() {
               </Button>
               <Button 
                 variant="outline" 
+                onClick={() => downloadReport('excel', report.title)}
                 className="rounded-2xl border-2 flex items-center justify-center gap-2 group/btn hover:border-green-500 hover:text-green-500 transition-all"
               >
                 <FileSpreadsheet className="h-4 w-4" />

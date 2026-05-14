@@ -17,12 +17,16 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       tokens: null,
       isAuthenticated: false,
-      setAuth: (user: User, tokens: AuthTokens) => {
+      setAuth: (user, tokens) => {
         localStorage.setItem('tokens', JSON.stringify(tokens));
+        // Añadimos cookie para que el middleware pueda leer el estado de auth
+        document.cookie = `isAuthenticated=true; path=/; max-age=${60 * 60 * 24 * 7}`;
         set({ user, tokens, isAuthenticated: true });
       },
       logout: () => {
         localStorage.removeItem('tokens');
+        // Eliminamos la cookie al cerrar sesión
+        document.cookie = 'isAuthenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
         set({ user: null, tokens: null, isAuthenticated: false });
       },
       updateUser: (user: User) => set({ user }),

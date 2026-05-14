@@ -4,41 +4,17 @@ import { useState } from 'react';
 import { Bell, Clock, CheckCircle2, AlertCircle, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface Notification {
-  id: number;
-  message: string;
-  type: 'info' | 'success' | 'warning' | 'comment';
-  created_at: string;
-  is_read: boolean;
-}
+import { useNotifications, Notification } from '@/lib/hooks/useNotifications';
 
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: 1,
-      message: 'Julián completó la tarea "API de Proyectos"',
-      type: 'success',
-      created_at: new Date().toISOString(),
-      is_read: false,
-    },
-    {
-      id: 2,
-      message: 'Nuevo comentario de Catalina en "Sidebar"',
-      type: 'comment',
-      created_at: new Date(Date.now() - 3600000).toISOString(),
-      is_read: false,
-    },
-    {
-      id: 3,
-      message: 'La tarea "Reportes" está próxima a vencer',
-      type: 'warning',
-      created_at: new Date(Date.now() - 86400000).toISOString(),
-      is_read: true,
-    }
-  ]);
+  const { notifications, markAsRead } = useNotifications();
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
+
+  const handleMarkAsRead = (id: number) => {
+    markAsRead(id);
+  };
 
   const getIcon = (type: Notification['type']) => {
     switch (type) {
@@ -84,6 +60,7 @@ export function NotificationBell() {
                 {notifications.map((n) => (
                   <div 
                     key={n.id}
+                    onClick={() => handleMarkAsRead(n.id)}
                     className={`flex gap-3 p-3 rounded-2xl transition-all cursor-pointer ${n.is_read ? 'bg-white opacity-60' : 'bg-blue-50/50 hover:bg-blue-50'}`}
                   >
                     <div className="mt-1">{getIcon(n.type)}</div>
