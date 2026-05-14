@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { motion } from 'framer-motion';
 
 const registerSchema = z.object({
   username: z.string().min(3, 'El nombre de usuario debe tener al menos 3 caracteres'),
@@ -39,22 +40,38 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-          Crea tu cuenta
+    <div className="flex min-h-screen bg-gray-50 flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="sm:mx-auto sm:w-full sm:max-w-md"
+      >
+        <div className="flex justify-center">
+          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-blue-500 flex items-center justify-center shadow-xl shadow-blue-200">
+            <span className="text-white font-black text-2xl">PF</span>
+          </div>
+        </div>
+        <h2 className="mt-6 text-center text-3xl font-black tracking-tight text-gray-900">
+          Únete a <span className="text-indigo-600">Nosotros</span>
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Únete a Precision Flow hoy mismo
+        <p className="mt-2 text-center text-sm text-gray-500 font-medium uppercase tracking-widest">
+          COMIENZA A GESTIONAR TUS PROYECTOS
         </p>
-      </div>
+      </motion.div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.1 }}
+        className="mt-8 sm:mx-auto sm:w-full sm:max-w-md"
+      >
+        <div className="bg-white py-10 px-6 shadow-2xl shadow-gray-200/50 rounded-3xl sm:px-12 border border-gray-100">
+          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <Input
               label="Nombre de usuario"
               type="text"
+              placeholder="Ej. julian_dev"
+              className="rounded-xl border-2"
               error={errors.username?.message}
               {...register('username')}
             />
@@ -62,6 +79,8 @@ export default function RegisterPage() {
             <Input
               label="Correo electrónico"
               type="email"
+              placeholder="tu@ejemplo.com"
+              className="rounded-xl border-2"
               error={errors.email?.message}
               {...register('email')}
             />
@@ -69,65 +88,69 @@ export default function RegisterPage() {
             <Input
               label="Contraseña"
               type="password"
+              placeholder="••••••••"
+              className="rounded-xl border-2"
               error={errors.password?.message}
               {...register('password')}
             />
 
             <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Rol
+              <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 ml-1">
+                Rol en el Equipo
               </label>
               <select
                 {...register('role')}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                className="block w-full rounded-xl border-2 border-gray-100 bg-gray-50 py-2.5 px-4 text-gray-900 focus:border-indigo-500 focus:ring-0 sm:text-sm transition-all"
               >
-                <option value="MEMBER">Miembro</option>
-                <option value="ADMIN">Administrador</option>
+                <option value="MEMBER">Miembro del Equipo</option>
+                <option value="ADMIN">Administrador de Proyectos</option>
               </select>
-              {errors.role && <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>}
+              {errors.role && <p className="mt-1 text-xs font-bold text-red-500">{errors.role.message}</p>}
             </div>
 
             {registerError && (
-              <div className="rounded-md bg-red-50 p-4">
-                <div className="flex">
-                  <div className="text-sm text-red-700">
-                    Error al registrarse. Por favor intenta de nuevo.
-                  </div>
+              <motion.div 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="rounded-2xl bg-red-50 p-4 border border-red-100"
+              >
+                <div className="text-xs font-bold text-red-600 uppercase tracking-tight text-center">
+                  Hubo un problema al crear tu cuenta.
                 </div>
-              </div>
+              </motion.div>
             )}
 
-            <div>
+            <div className="pt-2">
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full rounded-2xl h-12 text-sm font-bold uppercase tracking-widest shadow-lg shadow-indigo-200 bg-gradient-to-r from-indigo-600 to-blue-600 border-0"
                 isLoading={isRegistering}
               >
-                Registrarse
+                Registrarme Ahora
               </Button>
             </div>
           </form>
 
-          <div className="mt-6">
+          <div className="mt-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-gray-100" />
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="bg-white px-2 text-gray-500">¿Ya tienes cuenta?</span>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-white px-4 text-gray-400 font-bold uppercase tracking-widest">¿Ya eres parte?</span>
               </div>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-8">
               <Link href="/login">
-                <Button variant="outline" className="w-full">
-                  Iniciar sesión
+                <Button variant="outline" className="w-full rounded-2xl h-12 text-sm font-bold uppercase tracking-widest border-2 hover:bg-gray-50 transition-all">
+                  Iniciar Sesión
                 </Button>
               </Link>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
