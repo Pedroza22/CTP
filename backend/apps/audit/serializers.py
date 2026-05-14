@@ -3,8 +3,9 @@ from .models import AuditLog
 from apps.users.serializers import UserSerializer
 
 class AuditLogSerializer(serializers.ModelSerializer):
-    user_detail = UserSerializer(source='user', read_only=True)
+    actor_detail = UserSerializer(source='actor', read_only=True)
 
     class Meta:
         model = AuditLog
-        fields = '__all__'
+        fields = ('id', 'actor', 'actor_detail', 'action', 'model_name', 'object_id', 'changes', 'timestamp', 'ip_address')
+        read_only_fields = ('id', 'timestamp')
