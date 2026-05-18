@@ -51,6 +51,9 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.projects',
     'apps.tasks',
+    'apps.notifications',
+    'apps.audit',
+    'apps.dashboard',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'apps.audit.middleware.AuditMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
