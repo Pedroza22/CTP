@@ -7,3 +7,5 @@ python-dotenv
 django-cors-headers
 reportlab
 openpyxl
+gunicorn
+whitenoise
