@@ -2,33 +2,36 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { motion } from 'framer-motion';
-
-const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
-});
-
-type LoginForm = z.infer<typeof loginSchema>;
+import { loginSchema, LoginFormValues } from '@/lib/validations/auth';
+import { useState } from 'react';
 
 export default function LoginPage() {
   const { login, isLoggingIn, loginError } = useAuth();
+  const [submitError, setSubmitError] = useState<string | null>(null);
   
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginForm>({
+  } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginForm) => {
-    login(data);
+  const onSubmit = async (data: LoginFormValues) => {
+    setSubmitError(null);
+    console.log('Intentando iniciar sesión con:', data);
+    try {
+      await login(data);
+      console.log('Login exitoso');
+    } catch (e: any) {
+      console.error('Error en el login:', e);
+      setSubmitError(e.message || 'Ocurrió un error inesperado');
+    }
   };
 
   return (
@@ -63,8 +66,7 @@ export default function LoginPage() {
               label="Correo electrónico"
               type="email"
               autoComplete="email"
-              placeholder="tu@ejemplo.com"
-              className="rounded-xl border-2 focus:border-blue-500"
+              placeholder="admin@example.com"
               error={errors.email?.message}
               {...register('email')}
             />
@@ -74,10 +76,21 @@ export default function LoginPage() {
               type="password"
               autoComplete="current-password"
               placeholder="••••••••"
-              className="rounded-xl border-2 focus:border-blue-500"
               error={errors.password?.message}
               {...register('password')}
             />
+
+            {submitError && (
+              <motion.div 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="rounded-2xl bg-red-50 p-4 border border-red-100"
+              >
+                <div className="text-xs font-bold text-red-600 uppercase tracking-tight">
+                  {submitError}
+                </div>
+              </motion.div>
+            )}
 
             {loginError && (
               <motion.div 
@@ -86,7 +99,7 @@ export default function LoginPage() {
                 className="rounded-2xl bg-red-50 p-4 border border-red-100"
               >
                 <div className="flex">
-                  <div className="text-xs font-bold text-red-600 uppercase tracking-tight">
+                  <div className="text-xs font-bold text-red-600 uppercase tracking-tight text-red-600">
                     Credenciales incorrectas. Revisa tus datos e intenta de nuevo.
                   </div>
                 </div>
@@ -99,26 +112,27 @@ export default function LoginPage() {
                 className="w-full rounded-2xl h-12 text-sm font-bold uppercase tracking-widest shadow-lg shadow-blue-200"
                 isLoading={isLoggingIn}
               >
-                Entrar al Sistema
+                Iniciar Sesión
               </Button>
             </div>
           </form>
 
-          <div className="mt-8">
+          <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-100" />
+                <div className="w-full border-t border-gray-200" />
               </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="bg-white px-4 text-gray-400 font-bold uppercase tracking-widest">¿Nuevo aquí?</span>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-white px-2 text-gray-500">¿No tienes cuenta?</span>
               </div>
             </div>
 
-            <div className="mt-8">
-              <Link href="/register">
-                <Button variant="outline" className="w-full rounded-2xl h-12 text-sm font-bold uppercase tracking-widest border-2 hover:bg-gray-50 transition-all">
-                  Crear una Cuenta
-                </Button>
+            <div className="mt-6">
+              <Link
+                href="/register"
+                className="flex w-full justify-center rounded-2xl border-2 border-gray-100 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors uppercase tracking-widest"
+              >
+                Registrarse
               </Link>
             </div>
           </div>

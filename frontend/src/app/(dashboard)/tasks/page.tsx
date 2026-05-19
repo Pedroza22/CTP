@@ -11,6 +11,7 @@ import { CommentSection } from '@/components/tasks/CommentSection';
 import { useTasks } from '@/lib/hooks/useTasks';
 import { useProjects } from '@/lib/hooks/useProjects';
 import { Task } from '@/lib/types';
+import { TaskFormValues } from '@/lib/validations/task';
 
 export default function TasksPage() {
   const [view, setView] = useState<'list' | 'kanban'>('kanban');
@@ -20,20 +21,24 @@ export default function TasksPage() {
   const { tasks, isLoading, createTask, updateTask, isCreating, isUpdating } = useTasks();
   const { projects } = useProjects();
 
-  const handleCreateTask = (data: any) => {
-    createTask(data, {
-      onSuccess: () => setIsModalOpen(false),
-    });
+  const handleCreateTask = async (data: TaskFormValues) => {
+    try {
+      await createTask(data);
+      setIsModalOpen(false);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const handleUpdateTask = (data: any) => {
+  const handleUpdateTask = async (data: TaskFormValues) => {
     if (selectedTask) {
-      updateTask({ id: selectedTask.id, ...data }, {
-        onSuccess: () => {
-          setIsModalOpen(false);
-          setSelectedTask(undefined);
-        },
-      });
+      try {
+        await updateTask({ id: selectedTask.id, ...data });
+        setIsModalOpen(false);
+        setSelectedTask(undefined);
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 

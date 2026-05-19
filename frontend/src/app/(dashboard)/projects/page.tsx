@@ -9,6 +9,7 @@ import { ProjectForm } from '@/components/projects/ProjectForm';
 import { useProjects } from '@/lib/hooks/useProjects';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useRouter } from 'next/navigation';
+import { ProjectFormValues } from '@/lib/validations/project';
 
 export default function ProjectsPage() {
   const router = useRouter();
@@ -16,10 +17,13 @@ export default function ProjectsPage() {
   const { projects, isLoading, createProject, isCreating } = useProjects();
   const { user } = useAuth();
 
-  const handleCreateProject = (data: any) => {
-    createProject(data, {
-      onSuccess: () => setIsModalOpen(false),
-    });
+  const handleCreateProject = async (data: ProjectFormValues) => {
+    try {
+      await createProject(data);
+      setIsModalOpen(false);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   if (isLoading) {
@@ -39,7 +43,7 @@ export default function ProjectsPage() {
           <h1 className="text-2xl font-bold text-gray-900">Proyectos</h1>
           <p className="text-gray-500">Gestiona todos tus proyectos en un solo lugar.</p>
         </div>
-        {user?.role === 'ADMIN' && (
+        {user?.role === 'admin' && (
           <Button 
             className="flex items-center gap-2"
             onClick={() => setIsModalOpen(true)}
@@ -53,7 +57,7 @@ export default function ProjectsPage() {
       {projects.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
           <p className="text-gray-500 mb-4">No hay proyectos todavía.</p>
-          {user?.role === 'ADMIN' && (
+          {user?.role === 'admin' && (
             <Button variant="outline" onClick={() => setIsModalOpen(true)}>Crea tu primer proyecto</Button>
           )}
         </div>

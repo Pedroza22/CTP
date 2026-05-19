@@ -1,132 +1,181 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import { Calendar, User, ArrowLeft, Plus, Settings } from 'lucide-react';
-import api from '@/lib/api';
+import { Calendar, ArrowLeft, Plus, Users, BarChart3, Download } from 'lucide-react';
 import { Project, Task } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
-import { TaskCard } from '@/components/tasks/TaskCard';
+import { KanbanBoard } from '@/components/tasks/KanbanBoard';
 import { useTasks } from '@/lib/hooks/useTasks';
+import { useProjects } from '@/lib/hooks/useProjects';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { Modal } from '@/components/ui/Modal';
+import { TaskForm } from '@/components/tasks/TaskForm';
+import { TaskFormValues } from '@/lib/validations/task';
+import api from '@/lib/api';
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-  const projectId = parseInt(id as string);
+  const projectId = id as string;
 
-  const { data: project, isLoading: isLoadingProject } = useQuery({
-    queryKey: ['projects', projectId],
-    queryFn: async () => {
-      const response = await api.get<Project>(`/projects/${projectId}/`);
-      return response.data;
-    },
-  });
+  const { useProjectDetail } = useProjects();
+  const { data: project, isLoading: isLoadingProject } = useProjectDetail(projectId);
+  const { tasks, isLoading: isLoadingTasks, createTask, isCreating } = useTasks(projectId);
+  
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<Task['status']>('pending');
 
-  const { tasks, isLoading: isLoadingTasks } = useTasks(projectId);
+  const handleAddTask = (status: Task['status']) => {
+    setSelectedStatus(status);
+    setIsTaskModalOpen(true);
+  };
+
+  const handleCreateTask = async (data: TaskFormValues) => {
+    await createTask({ ...data, project: projectId, status: selectedStatus });
+    setIsTaskModalOpen(false);
+  };
+
+  const handleExportPDF = async () => {
+    const response = await api.get(`/projects/${projectId}/export_pdf/`, { responseType: 'blob' });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `reporte_${project?.name}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+  };
 
   if (isLoadingProject) {
-    return <div className="animate-pulse h-96 bg-gray-100 rounded-lg" />;
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
-  if (!project) {
-    return <div>Proyecto no encontrado</div>;
-  }
+  if (!project) return <div>Proyecto no encontrado</div>;
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center gap-4">
-        <button 
-          onClick={() => router.back()}
-          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-        >
-          <ArrowLeft className="h-5 w-5 text-gray-500" />
-        </button>
-        <h1 className="text-2xl font-bold text-gray-900">{project.name}</h1>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Descripción</h3>
-            <p className="text-gray-600 leading-relaxed">{project.description}</p>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium text-gray-900">Tareas del Proyecto</h3>
-              <Button size="sm" className="flex items-center gap-2">
-                <Plus className="h-4 w-4" />
-                Nueva Tarea
-              </Button>
+    <div className="space-y-8 pb-10">
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="flex items-center justify-between"
+      >
+        <div className="flex items-center gap-6">
+          <button 
+            onClick={() => router.back()}
+            className="h-12 w-12 flex items-center justify-center bg-white rounded-2xl shadow-lg shadow-gray-200/50 border border-gray-100 hover:bg-gray-50 transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-600" />
+          </button>
+          <div>
+            <h1 className="text-3xl font-black text-gray-900 tracking-tight">{project.name}</h1>
+            <div className="flex items-center gap-4 mt-1">
+              <span className="px-2.5 py-0.5 rounded-lg bg-blue-50 text-[10px] font-black text-blue-600 uppercase tracking-widest border border-blue-100">
+                {project.status}
+              </span>
+              <div className="flex items-center text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                <Calendar className="h-3 w-3 mr-1.5 text-blue-500" />
+                {project.start_date}
+              </div>
             </div>
-            
-            {isLoadingTasks ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[1, 2].map((i) => (
-                  <div key={i} className="h-40 bg-gray-100 rounded-lg animate-pulse" />
-                ))}
-              </div>
-            ) : tasks.length === 0 ? (
-              <div className="py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 text-center">
-                <p className="text-gray-500">No hay tareas en este proyecto.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {tasks.map((task) => (
-                  <TaskCard key={task.id} task={task} />
-                ))}
-              </div>
-            )}
           </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="outline" 
+            className="rounded-2xl h-12 px-6 text-[10px] font-black uppercase tracking-widest"
+            onClick={handleExportPDF}
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Reporte PDF
+          </Button>
+          <Button 
+            className="rounded-2xl h-12 px-6 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-200"
+            onClick={() => handleAddTask('pending')}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Nueva Tarea
+          </Button>
+        </div>
+      </motion.div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+        <div className="xl:col-span-3">
+          {isLoadingTasks ? (
+            <div className="grid grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map(i => <div key={i} className="h-96 bg-gray-100 rounded-3xl animate-pulse" />)}
+            </div>
+          ) : (
+            <KanbanBoard 
+              tasks={tasks} 
+              onAddTask={handleAddTask}
+              onTaskClick={(task) => console.log('Task clicked', task)}
+            />
+          )}
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm space-y-6">
-            <h3 className="text-lg font-medium text-gray-900 border-b border-gray-50 pb-4">Detalles</h3>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-3xl p-6 shadow-xl shadow-gray-200/50 border border-gray-100"
+          >
+            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-6 border-b border-gray-50 pb-4 flex items-center">
+              <BarChart3 className="h-4 w-4 mr-2 text-blue-500" />
+              Detalles
+            </h3>
+            <p className="text-sm text-gray-500 font-medium leading-relaxed mb-6">{project.description}</p>
             
             <div className="space-y-4">
-              <div className="flex items-center text-sm">
-                <Calendar className="h-4 w-4 text-gray-400 mr-3" />
-                <div>
-                  <p className="text-gray-500 text-xs">Fecha Inicio</p>
-                  <p className="text-gray-900 font-medium">{project.start_date}</p>
-                </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black text-gray-400 uppercase">Progreso</span>
+                <span className="text-xs font-black text-blue-600">65%</span>
               </div>
-              
-              <div className="flex items-center text-sm">
-                <Calendar className="h-4 w-4 text-gray-400 mr-3" />
-                <div>
-                  <p className="text-gray-500 text-xs">Fecha Fin</p>
-                  <p className="text-gray-900 font-medium">{project.end_date}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center text-sm">
-                <User className="h-4 w-4 text-gray-400 mr-3" />
-                <div>
-                  <p className="text-gray-500 text-xs">Creado por</p>
-                  <p className="text-gray-900 font-medium">{project.created_by_detail?.username || 'Admin'}</p>
-                </div>
+              <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full bg-blue-500 w-[65%]" />
               </div>
             </div>
+          </motion.div>
 
-            <div className="pt-4 border-t border-gray-50">
-              <Button variant="outline" className="w-full flex items-center justify-center gap-2">
-                <Settings className="h-4 w-4" />
-                Configuración del Proyecto
-              </Button>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white rounded-3xl p-6 shadow-xl shadow-gray-200/50 border border-gray-100"
+          >
+            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-6 border-b border-gray-50 pb-4 flex items-center">
+              <Users className="h-4 w-4 mr-2 text-blue-500" />
+              Equipo
+            </h3>
+            <div className="flex -space-x-2 overflow-hidden">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="inline-block h-10 w-10 rounded-2xl ring-4 ring-white bg-blue-100 flex items-center justify-center font-black text-blue-600 text-xs">
+                  U{i}
+                </div>
+              ))}
+              <div className="inline-block h-10 w-10 rounded-2xl ring-4 ring-white bg-gray-50 flex items-center justify-center font-black text-gray-400 text-xs">
+                +2
+              </div>
             </div>
-          </div>
-
-          <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Progreso</h3>
-            <div className="w-full bg-gray-100 rounded-full h-2.5 mb-2">
-              <div className="bg-blue-600 h-2.5 rounded-full w-2/3"></div>
-            </div>
-            <p className="text-xs text-gray-500 text-right">66% completado</p>
-          </div>
+          </motion.div>
         </div>
       </div>
+
+      <Modal
+        isOpen={isTaskModalOpen}
+        onClose={() => setIsTaskModalOpen(false)}
+        title="Crear Nueva Tarea"
+      >
+        <TaskForm 
+          onSubmit={handleCreateTask}
+          isLoading={isCreating}
+          initialData={{ status: selectedStatus }}
+        />
+      </Modal>
     </div>
   );
 }

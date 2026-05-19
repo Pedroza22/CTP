@@ -26,14 +26,14 @@ export function Sidebar() {
   const { user, logout } = useAuth();
 
   const filteredNavigation = navigation.filter(
-    (item) => !item.adminOnly || user?.role === 'ADMIN'
+    (item) => !item.adminOnly || user?.role === 'admin'
   );
 
   return (
     <div className="flex h-full w-64 flex-col bg-white border-r border-gray-200">
-      <div className="flex h-16 items-center px-6">
+      <Link href="/dashboard" className="flex h-16 items-center px-6 hover:bg-gray-50 transition-colors">
         <span className="text-xl font-bold text-blue-600">Precision Flow</span>
-      </div>
+      </Link>
       <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
         <nav className="mt-5 flex-1 space-y-1 px-2">
           {filteredNavigation.map((item) => {
