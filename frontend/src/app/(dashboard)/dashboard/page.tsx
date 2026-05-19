@@ -1,6 +1,6 @@
 'use client';
 
-import { Briefcase, CheckSquare, Clock, AlertCircle, TrendingUp, Users } from 'lucide-react';
+import { Briefcase, CheckSquare, Clock, AlertCircle, TrendingUp, BarChart2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { 
   Chart as ChartJS, 
@@ -16,6 +16,7 @@ import {
   Filler
 } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
+import { useDashboard } from '@/lib/hooks/useDashboard';
 
 ChartJS.register(
   ArcElement, 
@@ -30,51 +31,54 @@ ChartJS.register(
   Filler
 );
 
-const stats = [
-  { name: 'Proyectos Activos', value: '12', icon: Briefcase, color: 'from-blue-500 to-cyan-400', bg: 'bg-blue-500/10' },
-  { name: 'Tareas Pendientes', value: '45', icon: Clock, color: 'from-amber-500 to-orange-400', bg: 'bg-amber-500/10' },
-  { name: 'Tareas Completadas', value: '128', icon: CheckSquare, color: 'from-emerald-500 to-teal-400', bg: 'bg-emerald-500/10' },
-  { name: 'Tareas Bloqueadas', value: '3', icon: AlertCircle, color: 'from-rose-500 to-red-400', bg: 'bg-rose-500/10' },
-];
-
-const doughnutData = {
-  labels: ['Pendientes', 'En Progreso', 'Completadas', 'Bloqueadas'],
-  datasets: [
-    {
-      data: [45, 30, 128, 3],
-      backgroundColor: [
-        'rgba(156, 163, 175, 0.6)',
-        'rgba(59, 130, 246, 0.6)',
-        'rgba(16, 185, 129, 0.6)',
-        'rgba(244, 63, 94, 0.6)',
-      ],
-      hoverBackgroundColor: [
-        'rgba(156, 163, 175, 0.8)',
-        'rgba(59, 130, 246, 0.8)',
-        'rgba(16, 185, 129, 0.8)',
-        'rgba(244, 63, 94, 0.8)',
-      ],
-      borderWidth: 0,
-      cutout: '75%',
-    },
-  ],
-};
-
-const barData = {
-  labels: ['Proyecto A', 'Proyecto B', 'Proyecto C', 'Proyecto D', 'Proyecto E'],
-  datasets: [
-    {
-      label: '% de Avance',
-      data: [65, 40, 85, 30, 95],
-      backgroundColor: 'rgba(59, 130, 246, 0.7)',
-      hoverBackgroundColor: 'rgba(59, 130, 246, 1)',
-      borderRadius: 8,
-      barThickness: 20,
-    },
-  ],
-};
-
 export default function DashboardPage() {
+  const { stats, progress, statusCounts, isLoading } = useDashboard();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  const statCards = [
+    { name: 'Proyectos Activos', value: stats?.active_projects || 0, icon: Briefcase, color: 'from-blue-500 to-cyan-400', bg: 'bg-blue-500/10' },
+    { name: 'Tareas Pendientes', value: stats?.pending_tasks || 0, icon: Clock, color: 'from-amber-500 to-orange-400', bg: 'bg-amber-500/10' },
+    { name: 'Tareas Completadas', value: stats?.completed_tasks || 0, icon: CheckSquare, color: 'from-emerald-500 to-teal-400', bg: 'bg-emerald-500/10' },
+    { name: 'Total Proyectos', value: stats?.total_projects || 0, icon: BarChart2, color: 'from-rose-500 to-red-400', bg: 'bg-rose-500/10' },
+  ];
+
+  const doughnutData = {
+    labels: statusCounts.map(s => s.status.charAt(0).toUpperCase() + s.status.slice(1)),
+    datasets: [
+      {
+        data: statusCounts.map(s => s.count),
+        backgroundColor: [
+          'rgba(59, 130, 246, 0.6)',
+          'rgba(156, 163, 175, 0.6)',
+          'rgba(16, 185, 129, 0.6)',
+          'rgba(244, 63, 94, 0.6)',
+        ],
+        borderWidth: 0,
+        cutout: '75%',
+      },
+    ],
+  };
+
+  const barData = {
+    labels: progress.map(p => p.name.length > 15 ? p.name.substring(0, 15) + '...' : p.name),
+    datasets: [
+      {
+        label: '% de Avance',
+        data: progress.map(p => p.progress),
+        backgroundColor: 'rgba(59, 130, 246, 0.7)',
+        borderRadius: 8,
+        barThickness: 20,
+      },
+    ],
+  };
+
   return (
     <div className="space-y-10 pb-10">
       <motion.div 
@@ -94,156 +98,78 @@ export default function DashboardPage() {
           </div>
           <div className="pr-4">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Rendimiento</p>
-            <p className="text-sm font-bold text-gray-900">+12.5% este mes</p>
+            <p className="text-sm font-bold text-gray-900">Actualizado ahora</p>
           </div>
         </div>
       </motion.div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, index) => (
-          <motion.div 
+        {statCards.map((stat, idx) => (
+          <motion.div
             key={stat.name}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ y: -5 }}
-            className="relative overflow-hidden rounded-3xl bg-white p-6 shadow-xl shadow-gray-200/50 border border-gray-100 group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.1 }}
+            className="relative overflow-hidden rounded-3xl bg-white p-6 shadow-xl shadow-gray-200/50 border border-gray-100 group hover:scale-[1.02] transition-transform"
           >
-            <div className={`absolute top-0 right-0 -mr-4 -mt-4 h-24 w-24 rounded-full bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-            <div className="relative flex items-center">
-              <div className={`${stat.bg} rounded-2xl p-4 group-hover:scale-110 transition-transform duration-500`}>
-                <stat.icon className={`h-7 w-7 text-transparent bg-clip-text bg-gradient-to-br ${stat.color}`} style={{ color: 'unset', fill: 'none' }} />
-                {/* Fallback color if gradient text fails for icons */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <stat.icon className={`h-7 w-7 ${stat.name.includes('Activos') ? 'text-blue-500' : stat.name.includes('Pendientes') ? 'text-amber-500' : stat.name.includes('Completadas') ? 'text-emerald-500' : 'text-rose-500'}`} />
-                </div>
+            <div className={`absolute top-0 right-0 h-32 w-32 -mr-16 -mt-16 rounded-full opacity-10 bg-gradient-to-br ${stat.color}`} />
+            <div className="flex items-center justify-between">
+              <div className={`p-3 rounded-2xl ${stat.bg}`}>
+                <stat.icon className="h-6 w-6 text-gray-900" />
               </div>
-              <div className="ml-5">
-                <p className="text-sm font-bold text-gray-400 uppercase tracking-wider">{stat.name}</p>
-                <p className="text-3xl font-black text-gray-900">{stat.value}</p>
-              </div>
+              <span className="text-2xl font-black text-gray-900">{stat.value}</span>
+            </div>
+            <div className="mt-4">
+              <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">{stat.name}</h3>
             </div>
           </motion.div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.4 }}
           className="rounded-3xl bg-white p-8 shadow-xl shadow-gray-200/50 border border-gray-100"
         >
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl font-bold text-gray-900">Progreso de Proyectos</h3>
-            <div className="flex gap-2">
-              <div className="h-3 w-3 rounded-full bg-blue-500" />
-              <div className="h-3 w-3 rounded-full bg-blue-200" />
-            </div>
+            <h3 className="text-xl font-black text-gray-900 tracking-tight">Distribución de Estados</h3>
           </div>
-          <div className="h-[300px]">
-            <Bar 
-              data={barData} 
+          <div className="h-64 flex items-center justify-center">
+            <Doughnut 
+              data={doughnutData} 
               options={{ 
-                responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { 
-                  y: { 
-                    beginAtZero: true, 
-                    max: 100,
-                    grid: { display: false },
-                    border: { display: false }
-                  },
-                  x: {
-                    grid: { display: false },
-                    border: { display: false }
-                  }
+                plugins: {
+                  legend: { position: 'right', labels: { usePointStyle: true, font: { weight: 'bold' } } }
                 }
               }} 
             />
           </div>
         </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5 }}
           className="rounded-3xl bg-white p-8 shadow-xl shadow-gray-200/50 border border-gray-100"
         >
-          <h3 className="text-xl font-bold text-gray-900 mb-8">Distribución de Tareas</h3>
-          <div className="h-[300px] relative">
-            <Doughnut 
-              data={doughnutData} 
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-black text-gray-900 tracking-tight">Progreso de Proyectos</h3>
+          </div>
+          <div className="h-64">
+            <Bar 
+              data={barData} 
               options={{ 
-                responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    position: 'bottom',
-                    labels: {
-                      usePointStyle: true,
-                      padding: 20,
-                      font: { weight: 'bold' }
-                    }
-                  }
-                }
-              }}
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, max: 100 } }
+              }} 
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
-              <p className="text-4xl font-black text-gray-900">176</p>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Total</p>
-            </div>
           </div>
         </motion.div>
       </div>
-
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="rounded-3xl bg-white shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden"
-      >
-        <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-100 px-8 py-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-              <Clock className="h-5 w-5" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900">Actividad Reciente</h3>
-          </div>
-          <button className="text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors">Ver todo</button>
-        </div>
-        <div className="p-8">
-          <div className="space-y-6">
-            {[
-              { user: 'Julián', action: 'completó la tarea', target: 'Implementar API de Proyectos', time: '15 min', color: 'bg-emerald-500' },
-              { user: 'Catalina', action: 'creó el componente', target: 'Kanban Board v2', time: '45 min', color: 'bg-blue-500' },
-              { user: 'Dev3', action: 'subió un archivo en', target: 'Reportes Mensuales', time: '2 horas', color: 'bg-amber-500' },
-            ].map((item, i) => (
-              <motion.div 
-                key={i} 
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.7 + (i * 0.1) }}
-                className="flex items-center group cursor-pointer"
-              >
-                <div className={`h-12 w-12 rounded-2xl ${item.color} flex items-center justify-center text-white font-bold shadow-lg shadow-${item.color.split('-')[1]}-200 group-hover:scale-110 transition-transform`}>
-                  {item.user[0]}
-                </div>
-                <div className="ml-4 flex-1">
-                  <p className="text-sm text-gray-600">
-                    <span className="font-bold text-gray-900">{item.user}</span> {item.action} <span className="font-bold text-blue-600">{item.target}</span>
-                  </p>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-tighter mt-1 flex items-center gap-1">
-                    <Clock className="h-3 w-3" /> Hace {item.time}
-                  </p>
-                </div>
-                <div className="h-2 w-2 rounded-full bg-gray-200 group-hover:bg-blue-500 transition-colors" />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
     </div>
   );
 }

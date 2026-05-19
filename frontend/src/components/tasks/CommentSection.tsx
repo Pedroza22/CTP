@@ -8,9 +8,9 @@ import { User as UserIcon, Send, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Comment {
-  id: number;
-  task: number;
-  user: number;
+  id: string;
+  task: string;
+  user: string;
   user_detail: {
     username: string;
     avatar_url?: string;
@@ -20,7 +20,7 @@ interface Comment {
 }
 
 interface CommentSectionProps {
-  taskId: number;
+  taskId: string;
 }
 
 export function CommentSection({ taskId }: CommentSectionProps) {
@@ -37,19 +37,19 @@ export function CommentSection({ taskId }: CommentSectionProps) {
       } catch (e) {
         return [
           {
-            id: 1,
+            id: '1',
             task: taskId,
-            user: 1,
+            user: '1',
             user_detail: { username: 'Julian' },
             content: 'He revisado la base de datos y todo parece estar en orden.',
             created_at: new Date(Date.now() - 3600000).toISOString(),
           },
           {
-            id: 2,
+            id: '2',
             task: taskId,
-            user: 2,
+            user: '2',
             user_detail: { username: 'Catalina' },
-            content: 'Excelente, procederé con el diseño del Sidebar.',
+            content: 'Ya subí los mockups iniciales a Figma.',
             created_at: new Date(Date.now() - 1800000).toISOString(),
           }
         ];

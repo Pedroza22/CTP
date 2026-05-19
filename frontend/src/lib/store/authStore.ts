@@ -1,35 +1,46 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { User, AuthTokens } from '../types';
+
+export interface User {
+  id: string;
+  email: string;
+  username: string;
+  role: 'admin' | 'member';
+  avatar_url?: string;
+}
 
 interface AuthState {
   user: User | null;
-  tokens: AuthTokens | null;
   isAuthenticated: boolean;
-  setAuth: (user: User, tokens: AuthTokens) => void;
+  setAuth: (user: User, accessToken: string, refreshToken: string) => void;
+  updateUser: (user: Partial<User>) => void;
   logout: () => void;
-  updateUser: (user: User) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
-      tokens: null,
       isAuthenticated: false,
-      setAuth: (user, tokens) => {
-        localStorage.setItem('tokens', JSON.stringify(tokens));
-        // Añadimos cookie para que el middleware pueda leer el estado de auth
-        document.cookie = `isAuthenticated=true; path=/; max-age=${60 * 60 * 24 * 7}`;
-        set({ user, tokens, isAuthenticated: true });
+      setAuth: (user, accessToken, refreshToken) => {
+        localStorage.setItem('access_token', accessToken);
+        localStorage.setItem('refresh_token', refreshToken);
+        // Set cookie for middleware
+        document.cookie = `isAuthenticated=true; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
+        set({ user, isAuthenticated: true });
+      },
+      updateUser: (updatedUser) => {
+        set((state) => ({
+          user: state.user ? { ...state.user, ...updatedUser } : null,
+        }));
       },
       logout: () => {
-        localStorage.removeItem('tokens');
-        // Eliminamos la cookie al cerrar sesión
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        // Remove cookie
         document.cookie = 'isAuthenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-        set({ user: null, tokens: null, isAuthenticated: false });
+        set({ user: null, isAuthenticated: false });
       },
-      updateUser: (user: User) => set({ user }),
     }),
     {
       name: 'auth-storage',

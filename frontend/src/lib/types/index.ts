@@ -1,7 +1,7 @@
-export type Role = 'ADMIN' | 'MEMBER';
+export type Role = 'admin' | 'member';
 
 export interface User {
-  id: number;
+  id: string;
   username: string;
   email: string;
   role: Role;
@@ -9,28 +9,29 @@ export interface User {
 }
 
 export interface Project {
-  id: number;
+  id: string;
   name: string;
   description: string;
   start_date: string;
-  end_date: string;
-  status: 'ACTIVE' | 'COMPLETED' | 'ON_HOLD';
+  end_date: string | null;
+  status: 'active' | 'completed' | 'on_hold' | 'cancelled';
   created_at: string;
   updated_at: string;
-  created_by: number;
+  created_by: string;
   created_by_detail?: User;
 }
 
 export interface Task {
-  id: number;
-  project: number;
+  id: string;
+  project: string;
   title: string;
   description: string;
-  due_date: string;
-  status: 'PENDING' | 'IN_PROGRESS' | 'DONE' | 'BLOCKED';
-  priority: 'LOW' | 'MEDIUM' | 'HIGH';
-  assigned_to?: number;
+  due_date: string | null;
+  status: 'pending' | 'in_progress' | 'done' | 'blocked';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  assigned_to?: string | null;
   assigned_to_detail?: User;
+  comment_count?: number;
   created_at: string;
   updated_at: string;
 }
