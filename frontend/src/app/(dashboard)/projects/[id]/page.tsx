@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { Calendar, ArrowLeft, Plus, Users, BarChart3, Download } from 'lucide-react';
-import { Project, Task } from '@/lib/types';
+import { Task } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 import { KanbanBoard } from '@/components/tasks/KanbanBoard';
 import { useTasks } from '@/lib/hooks/useTasks';

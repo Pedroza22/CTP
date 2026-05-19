@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const tokens = request.cookies.get('auth-storage'); // Zustand persist default cookie if used or manual check
   // Note: Since Zustand persist usually uses localStorage, a real middleware 
   // often needs a separate session cookie for server-side protection.
   // For now, we will look for a 'session-token' or similar if implemented.
