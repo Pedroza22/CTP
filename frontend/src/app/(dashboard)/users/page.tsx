@@ -6,7 +6,6 @@ import api from '@/lib/api';
 import { User, Role } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 import { 
-  Users as UsersIcon, 
   UserPlus, 
   Mail, 
   Shield, 
@@ -19,16 +18,15 @@ import { Modal } from '@/components/ui/Modal';
 
 export default function UsersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const queryClient = useQueryClient();
 
-  const { data: users = [], isLoading } = useQuery({
+  const { data: users = [] } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
       // Intentar fetch real, si no devolver mocks
       try {
         const response = await api.get<User[]>('/auth/users/'); // Ajustar según backend
         return response.data;
-      } catch (e) {
+      } catch {
         return [
           { id: '1', username: 'Julian', email: 'julian@example.com', role: 'admin' as Role },
           { id: '2', username: 'Catalina', email: 'catalina@example.com', role: 'member' as Role },

@@ -28,9 +28,10 @@ export default function LoginPage() {
     try {
       await login(data);
       console.log('Login exitoso');
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('Error en el login:', e);
-      setSubmitError(e.message || 'Ocurrió un error inesperado');
+      const errorMessage = e instanceof Error ? e.message : 'Ocurrió un error inesperado';
+      setSubmitError(errorMessage);
     }
   };
 

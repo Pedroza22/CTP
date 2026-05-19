@@ -4,6 +4,7 @@ import { Search, User } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { NotificationBell } from './NotificationBell';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Navbar() {
   const { user } = useAuth();
@@ -30,9 +31,9 @@ export function Navbar() {
             <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{user?.role || 'Miembro'}</p>
           </div>
           <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 p-0.5 shadow-lg shadow-blue-200 transition-transform group-hover:scale-105">
-            <div className="h-full w-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden">
+            <div className="h-full w-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden relative">
               {user?.avatar_url ? (
-                <img src={user.avatar_url} alt="" className="h-full w-full object-cover" />
+                <Image src={user.avatar_url} alt="Profile" fill className="object-cover" />
               ) : (
                 <User className="h-6 w-6 text-blue-600" />
               )}
