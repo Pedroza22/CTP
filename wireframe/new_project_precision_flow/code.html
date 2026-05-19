@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create New Project</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#434654",
+                        "secondary": "#4442e3",
+                        "tertiary-fixed": "#ffd8ee",
+                        "on-background": "#131b2e",
+                        "on-primary-fixed": "#00174d",
+                        "on-tertiary-fixed": "#3a0030",
+                        "primary": "#003fb1",
+                        "on-surface": "#131b2e",
+                        "surface-container-low": "#f2f3ff",
+                        "primary-fixed-dim": "#b5c4ff",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-secondary-fixed": "#09006b",
+                        "secondary-fixed": "#e1dfff",
+                        "on-secondary-container": "#fffbff",
+                        "surface-tint": "#1353d8",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#2c24ce",
+                        "surface-container-high": "#e2e7ff",
+                        "tertiary-container": "#b40099",
+                        "surface-container-highest": "#dae2fd",
+                        "primary-container": "#1a56db",
+                        "inverse-primary": "#b5c4ff",
+                        "secondary-container": "#5f5ffd",
+                        "secondary-fixed-dim": "#c1c1ff",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#860071",
+                        "on-primary-container": "#d4dcff",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#ffd0ec",
+                        "background": "#faf8ff",
+                        "surface-dim": "#d2d9f4",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-bright": "#faf8ff",
+                        "outline-variant": "#c3c5d7",
+                        "surface": "#faf8ff",
+                        "tertiary": "#8b0075",
+                        "surface-variant": "#dae2fd",
+                        "inverse-surface": "#283044",
+                        "on-primary-fixed-variant": "#003dab",
+                        "surface-container": "#eaedff",
+                        "outline": "#737686",
+                        "tertiary-fixed-dim": "#ffade3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "margin-desktop": "32px",
+                        "sm": "8px",
+                        "margin-mobile": "16px",
+                        "unit": "4px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "2xl": "48px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "body-sm": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["13px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface-container-lowest dark:bg-on-background border-b border-outline-variant dark:border-on-surface-variant shadow-sm dark:shadow-none fixed top-0 left-0 w-full h-16 z-50 flex items-center justify-between px-margin-mobile md:px-margin-desktop">
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-on-surface-variant p-2 rounded-full transition-colors active:scale-98">
+<span class="material-symbols-outlined">close</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed-dim">New Project</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="font-label-md text-label-md px-4 py-2 text-primary hover:bg-surface-container-high rounded-lg transition-colors active:scale-98">Cancel</button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-lg hover:bg-primary-container transition-colors active:scale-98">Save</button>
+</div>
+</header>
+<main class="pt-20 pb-24 px-margin-mobile">
+<form class="flex flex-col gap-6 max-w-xl mx-auto">
+<!-- Section: Visual Identity -->
+<div class="relative w-full h-32 rounded-xl overflow-hidden mb-2 group">
+<img class="w-full h-full object-cover" data-alt="A sophisticated modern office space with clean lines, soft natural light pouring through large windows, and a minimalist color palette of slate and deep blue. The scene is calm and professional, perfectly capturing the essence of high-velocity project management. Soft depth of field blurs the background furniture to create a sense of focused workspace quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC15UrsFj-PU2R98pHN5PxSi4uTEazpeuin6eqrz5QGc5euXmP3pWcLqAENQ4CUf0H0YPT1QRoLELzUYD3zuV4cWAKpPHu7jUDptteRgxtuMWPAQw2P1n10AJg5RjAL8riDySyw_3rZ_iJZKCp4ThFMrnEDEra8ejQBlnK-IXacN8ZZAqwr0Ykx5rtgXKUKIPN2IYu-7Osa1h_qT2pfLQskCGrfBCD1GUnQyvy3YjTGzTbu6GGPMI3FbbM2jiyQjneC3YMSOXfOwuQP"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+<button class="absolute bottom-2 right-2 bg-surface-container-lowest/90 backdrop-blur-sm p-2 rounded-lg flex items-center gap-2 font-label-md text-label-md text-primary" type="button">
+<span class="material-symbols-outlined text-[18px]">add_a_photo</span>
+                    Add Cover
+                </button>
+</div>
+<!-- Field: Project Title -->
+<div class="flex flex-col gap-1">
+<label class="font-body-sm text-body-sm text-on-surface-variant ml-1">Project Title</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-outline" placeholder="e.g., Q4 Strategic Roadmap" type="text"/>
+</div>
+<!-- Field: Description -->
+<div class="flex flex-col gap-1">
+<label class="font-body-sm text-body-sm text-on-surface-variant ml-1">Description</label>
+<textarea class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-outline resize-none" placeholder="Outline the project goals and core objectives..." rows="4"></textarea>
+</div>
+<!-- Date Range Group -->
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1">
+<label class="font-body-sm text-body-sm text-on-surface-variant ml-1">Start Date</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-10 pr-4 py-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" type="date"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">calendar_today</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-body-sm text-body-sm text-on-surface-variant ml-1">End Date</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-10 pr-4 py-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" type="date"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">event</span>
+</div>
+</div>
+</div>
+<!-- Field: Initial Status -->
+<div class="flex flex-col gap-1">
+<label class="font-body-sm text-body-sm text-on-surface-variant ml-1">Initial Status</label>
+<div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+<button class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-surface-container-high border-2 border-primary rounded-full font-label-md text-label-md text-primary" type="button">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                        Planning
+                    </button>
+<button class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-surface-container-low border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors" type="button">
+<span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                        Active
+                    </button>
+<button class="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-surface-container-low border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors" type="button">
+<span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                        On Hold
+                    </button>
+</div>
+</div>
+<!-- Field: Assign Members -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end ml-1">
+<label class="font-body-sm text-body-sm text-on-surface-variant">Assign Members</label>
+<span class="font-label-md text-label-md text-primary hover:underline cursor-pointer">Invite Others</span>
+</div>
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-4 flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full border border-outline-variant" data-alt="Close up portrait of a professional male project manager with a friendly and focused expression. The lighting is studio-quality and soft, set against a blurred corporate office background. The color palette is composed of soft blues and warm skin tones, conveying trust and reliability in a high-performance workspace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsq61RyLZ0oRnifi2iuNZpPKt3RpXxz6W-Ji5_ANLq9ZzKHMTVnTwZZMxiTfLld2g64dN1Jr046922ro6kVOuWzUOaFXh8BKtGX9dRMALL202Dsr8Dllq3ynohGpoEFlD10sj-PBXgHncCOnG6VM6kaoq4Si_1UEoTvwxBdcFKCcvz3qYqbzk7BKUb1XMlFjoMJ1eFcBAgYnpnMCefCxEVgTtexMyz9Oeikq-j3dGtfrDRf_0EOut657G_9BrkdixkEEsyhrqn9s55"/>
+<div class="flex-1">
+<p class="font-body-md text-body-md font-medium">Alex Morgan (You)</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Project Lead</p>
+</div>
+<span class="material-symbols-outlined text-primary">check_circle</span>
+</div>
+<div class="h-px bg-outline-variant/30"></div>
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+<div class="flex -space-x-3">
+<img class="w-8 h-8 rounded-full border-2 border-surface ring-1 ring-outline-variant" data-alt="Portrait of a female creative director looking confidently at the camera. Soft natural lighting, minimal professional attire, and a clean professional background that aligns with modern corporate aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEukOrgfyjwbANA4ZOZE-vaVqw4I8eR-2rPqIcV6M1r6lk_7o0j9VDgXPdCRfa_dOXDByVaO3h3ohsF5WzfmVro2rhQSs5CEDmJwgB9QwpTmCiN5tuTjl40e4HtCtObf8w9GyJ0pucDt3vY3ZeXPIaJWnKBjlTESapwxDWuguwLS0J4C7nLwKOlcmps0oUee8HIGsTfFoJNi5-yPViGN3Lj8B6JTMQZTr8UZvSmpyyuTOFkcALnpiXqVmgbEEer6vxImcpj3S0IdLU"/>
+<img class="w-8 h-8 rounded-full border-2 border-surface ring-1 ring-outline-variant" data-alt="Headshot of a male software engineer in a bright, modern office setting. High-key lighting, focused professional demeanor, and high-performance minimalist style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuANlzs-JpqIiIzEaHxw0jzMdCzcKadA74ZHoJed-SBLkOIBVbjMByrlwIlUXm130a1NpG10kjkfCj-q-7kPB0s9JlilRWc-OUUsD-nO4qxl31mH-_JJHRw38q6p_Fn4KgfNw1vBO5bEhB-2VP8kopUWPv7W8KEn00v9OLU0zjucS5qqJoDZj0GgjMN5TPsQGpGe6XNiH_cqcvMxuwh9s5N9HgpN8zSPcrjthktQ6ICgML0Z3GEV2NN5A3NOyQO6mgM4YGCKQCWSyD-R"/>
+<img class="w-8 h-8 rounded-full border-2 border-surface ring-1 ring-outline-variant" data-alt="Female product designer portrait with a clean, approachable smile. Minimalist studio lighting, neutral color background, professional and modern high-quality photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5b-EQw_eTI7bQUZHOsXOdD8Q0gWyAkhDVbosaH1mSh4ftmitgq2Mdj4MSEJlWPXrS1YmrptSF_-UppU7QGQbYN5MaHgRDojkbwkD8a-jBlSknWAA5oHy5L3jtE9th2kkU-837y-zHVRSKLva8Ny5QOjAvnjedtc_rmk5hjaFXmZNJTW_-IxyR_Q3I27KrjWpiSIuha3feXXg52WikdAVQke6DDDuuDsIyq43t7reWgQEItVrUB1ScjhFS2D7PcRXjQ6sAdm8rsOHU"/>
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container border-2 border-surface ring-1 ring-outline-variant flex items-center justify-center font-label-md text-[10px]">+12</div>
+</div>
+<button class="ml-2 w-8 h-8 rounded-full border border-dashed border-primary flex items-center justify-center text-primary" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Section: Project Type (Bento Inspired) -->
+<div class="grid grid-cols-2 gap-3 mt-2">
+<button class="p-4 bg-primary/5 border-2 border-primary rounded-xl flex flex-col items-start gap-2 text-left" type="button">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">layers</span>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">Agile Board</p>
+<p class="font-label-md text-[11px] text-on-surface-variant">Sprints &amp; Kanban</p>
+</div>
+</button>
+<button class="p-4 bg-surface-container-low border border-outline-variant rounded-xl flex flex-col items-start gap-2 text-left hover:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-on-surface-variant">list_alt</span>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">Task List</p>
+<p class="font-label-md text-[11px] text-on-surface-variant">Hierarchical tasks</p>
+</div>
+</button>
+</div>
+<!-- Primary Action -->
+<button class="w-full bg-primary-container text-on-primary-container font-headline-md text-headline-md py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary transition-all active:scale-95 flex items-center justify-center gap-2 mt-4" type="submit">
+                Create Project
+                <span class="material-symbols-outlined">rocket_launch</span>
+</button>
+</form>
+</main>
+<!-- Bottom Navigation Shell (Re-rendered as requested for top-level topbar matching) -->
+<!-- Note: Following the 'Destination Rule' and 'Automatic Suppression' in the prompt instructions, 
+         since this is a task-focused "Create" screen with a Close/Cancel action, the BottomNavBar is suppressed 
+         to prioritize the focused journey. -->
+</body></html>
