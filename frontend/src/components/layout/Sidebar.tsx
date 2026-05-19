@@ -26,7 +26,7 @@ export function Sidebar() {
   const { user, logout } = useAuth();
 
   const filteredNavigation = navigation.filter(
-    (item) => !item.adminOnly || user?.role === 'ADMIN'
+    (item) => !item.adminOnly || user?.role === 'admin'
   );
 
   return (
