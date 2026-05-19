@@ -26,3 +26,9 @@ Para facilitar las pruebas de la plataforma, se han creado los siguientes usuari
 - **Frontend:** Next.js, Tailwind CSS, TanStack Query, Zustand
 - **Base de Datos:** PostgreSQL (Supabase)
 - **Autenticación:** JWT (JSON Web Tokens)
+
+
+# GRAPH
+
+![alt text](image.png)
+
