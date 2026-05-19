@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
-import { Button } from '@/components/ui/Button';
 import { User as UserIcon, Send, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -34,7 +33,7 @@ export function CommentSection({ taskId }: CommentSectionProps) {
       try {
         const response = await api.get<Comment[]>(`/comments/?task_id=${taskId}`);
         return response.data;
-      } catch (e) {
+      } catch {
         return [
           {
             id: '1',

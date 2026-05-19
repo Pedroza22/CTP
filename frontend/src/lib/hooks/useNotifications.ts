@@ -18,7 +18,7 @@ export function useNotifications() {
       try {
         const response = await api.get<Notification[]>('/notifications/');
         return response.data;
-      } catch (e) {
+      } catch {
         // Mocks if backend is not ready
         return [
           {

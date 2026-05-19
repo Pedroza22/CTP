@@ -1,6 +1,7 @@
 import { Task } from '@/lib/types';
-import { Calendar, MoreVertical, MessageSquare, AlertCircle, Clock, CheckCircle2 } from 'lucide-react';
+import { Calendar, MessageSquare, AlertCircle, Clock, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/components/ui/Button';
+import Image from 'next/image';
 
 interface TaskCardProps {
   task: Task;
@@ -57,9 +58,9 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
             </div>
           )}
           
-          <div className="h-6 w-6 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center overflow-hidden">
+          <div className="h-6 w-6 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center overflow-hidden relative">
             {task.assigned_to_detail?.avatar_url ? (
-              <img src={task.assigned_to_detail.avatar_url} alt="" className="h-full w-full object-cover" />
+              <Image src={task.assigned_to_detail.avatar_url} alt={task.assigned_to_detail.username} fill className="object-cover" />
             ) : (
               <span className="text-[8px] font-black text-blue-600 uppercase">
                 {task.assigned_to_detail?.username.substring(0, 2)}

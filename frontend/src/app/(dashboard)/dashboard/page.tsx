@@ -1,6 +1,6 @@
 'use client';
 
-import { Briefcase, CheckSquare, Clock, AlertCircle, TrendingUp, BarChart2 } from 'lucide-react';
+import { Briefcase, CheckSquare, Clock, TrendingUp, BarChart2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { 
