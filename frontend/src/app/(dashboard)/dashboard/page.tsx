@@ -2,6 +2,7 @@
 
 import { Briefcase, CheckSquare, Clock, AlertCircle, TrendingUp, BarChart2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { 
   Chart as ChartJS, 
   ArcElement, 
@@ -43,10 +44,10 @@ export default function DashboardPage() {
   }
 
   const statCards = [
-    { name: 'Proyectos Activos', value: stats?.active_projects || 0, icon: Briefcase, color: 'from-blue-500 to-cyan-400', bg: 'bg-blue-500/10' },
-    { name: 'Tareas Pendientes', value: stats?.pending_tasks || 0, icon: Clock, color: 'from-amber-500 to-orange-400', bg: 'bg-amber-500/10' },
-    { name: 'Tareas Completadas', value: stats?.completed_tasks || 0, icon: CheckSquare, color: 'from-emerald-500 to-teal-400', bg: 'bg-emerald-500/10' },
-    { name: 'Total Proyectos', value: stats?.total_projects || 0, icon: BarChart2, color: 'from-rose-500 to-red-400', bg: 'bg-rose-500/10' },
+    { name: 'Proyectos Activos', value: stats?.active_projects || 0, icon: Briefcase, color: 'from-blue-500 to-cyan-400', bg: 'bg-blue-500/10', href: '/projects' },
+    { name: 'Tareas Pendientes', value: stats?.pending_tasks || 0, icon: Clock, color: 'from-amber-500 to-orange-400', bg: 'bg-amber-500/10', href: '/tasks' },
+    { name: 'Tareas Completadas', value: stats?.completed_tasks || 0, icon: CheckSquare, color: 'from-emerald-500 to-teal-400', bg: 'bg-emerald-500/10', href: '/tasks' },
+    { name: 'Total Proyectos', value: stats?.total_projects || 0, icon: BarChart2, color: 'from-rose-500 to-red-400', bg: 'bg-rose-500/10', href: '/projects' },
   ];
 
   const doughnutData = {
@@ -92,37 +93,41 @@ export default function DashboardPage() {
           </h1>
           <p className="mt-2 text-lg text-gray-500">Gestión de proyectos y visualización de métricas en tiempo real.</p>
         </div>
-        <div className="flex items-center gap-3 bg-white p-2 rounded-2xl shadow-sm border border-gray-100">
-          <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+        <button 
+          onClick={() => window.location.reload()}
+          className="flex items-center gap-3 bg-white p-2 rounded-2xl shadow-sm border border-gray-100 hover:bg-gray-50 transition-all active:scale-95 group"
+        >
+          <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:rotate-12 transition-transform">
             <TrendingUp className="h-5 w-5" />
           </div>
-          <div className="pr-4">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Rendimiento</p>
-            <p className="text-sm font-bold text-gray-900">Actualizado ahora</p>
+          <div className="pr-4 text-left">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider text-[9px]">Rendimiento</p>
+            <p className="text-sm font-black text-gray-900 leading-tight">Actualizar <br/> ahora</p>
           </div>
-        </div>
+        </button>
       </motion.div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat, idx) => (
-          <motion.div
-            key={stat.name}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.1 }}
-            className="relative overflow-hidden rounded-3xl bg-white p-6 shadow-xl shadow-gray-200/50 border border-gray-100 group hover:scale-[1.02] transition-transform"
-          >
-            <div className={`absolute top-0 right-0 h-32 w-32 -mr-16 -mt-16 rounded-full opacity-10 bg-gradient-to-br ${stat.color}`} />
-            <div className="flex items-center justify-between">
-              <div className={`p-3 rounded-2xl ${stat.bg}`}>
-                <stat.icon className="h-6 w-6 text-gray-900" />
+          <Link key={stat.name} href={stat.href}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.1 }}
+              className="relative overflow-hidden rounded-3xl bg-white p-6 shadow-xl shadow-gray-200/50 border border-gray-100 group hover:scale-[1.02] transition-transform cursor-pointer"
+            >
+              <div className={`absolute top-0 right-0 h-32 w-32 -mr-16 -mt-16 rounded-full opacity-10 bg-gradient-to-br ${stat.color}`} />
+              <div className="flex items-center justify-between">
+                <div className={`p-3 rounded-2xl ${stat.bg}`}>
+                  <stat.icon className="h-6 w-6 text-gray-900" />
+                </div>
+                <span className="text-2xl font-black text-gray-900">{stat.value}</span>
               </div>
-              <span className="text-2xl font-black text-gray-900">{stat.value}</span>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">{stat.name}</h3>
-            </div>
-          </motion.div>
+              <div className="mt-4">
+                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">{stat.name}</h3>
+              </div>
+            </motion.div>
+          </Link>
         ))}
       </div>
 

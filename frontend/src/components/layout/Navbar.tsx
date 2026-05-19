@@ -3,6 +3,7 @@
 import { Search, User } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { NotificationBell } from './NotificationBell';
+import Link from 'next/link';
 
 export function Navbar() {
   const { user } = useAuth();
@@ -23,12 +24,12 @@ export function Navbar() {
       </div>
       <div className="flex items-center space-x-6">
         <NotificationBell />
-        <div className="flex items-center space-x-4 pl-6 border-l border-gray-100">
+        <Link href="/users" className="flex items-center space-x-4 pl-6 border-l border-gray-100 hover:bg-gray-50/50 p-2 rounded-2xl transition-all group">
           <div className="text-right hidden sm:block">
-            <p className="text-sm font-black text-gray-900">{user?.username}</p>
-            <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{user?.role}</p>
+            <p className="text-sm font-black text-gray-900 group-hover:text-blue-600 transition-colors">{user?.username || 'Usuario'}</p>
+            <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{user?.role || 'Miembro'}</p>
           </div>
-          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 p-0.5 shadow-lg shadow-blue-200 group cursor-pointer transition-transform hover:scale-105">
+          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 p-0.5 shadow-lg shadow-blue-200 transition-transform group-hover:scale-105">
             <div className="h-full w-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden">
               {user?.avatar_url ? (
                 <img src={user.avatar_url} alt="" className="h-full w-full object-cover" />
@@ -37,7 +38,7 @@ export function Navbar() {
               )}
             </div>
           </div>
-        </div>
+        </Link>
       </div>
     </header>
   );

@@ -30,16 +30,16 @@ export default function UsersPage() {
         return response.data;
       } catch (e) {
         return [
-          { id: 1, username: 'Julian', email: 'julian@example.com', role: 'ADMIN' as Role },
-          { id: 2, username: 'Catalina', email: 'catalina@example.com', role: 'MEMBER' as Role },
-          { id: 3, username: 'Dev3', email: 'dev3@example.com', role: 'MEMBER' as Role },
+          { id: '1', username: 'Julian', email: 'julian@example.com', role: 'admin' as Role },
+          { id: '2', username: 'Catalina', email: 'catalina@example.com', role: 'member' as Role },
+          { id: '3', username: 'Dev3', email: 'dev3@example.com', role: 'member' as Role },
         ];
       }
     },
     initialData: [
-      { id: 1, username: 'Julian', email: 'julian@example.com', role: 'ADMIN' as Role },
-      { id: 2, username: 'Catalina', email: 'catalina@example.com', role: 'MEMBER' as Role },
-      { id: 3, username: 'Dev3', email: 'dev3@example.com', role: 'MEMBER' as Role },
+      { id: '1', username: 'Julian', email: 'julian@example.com', role: 'admin' as Role },
+      { id: '2', username: 'Catalina', email: 'catalina@example.com', role: 'member' as Role },
+      { id: '3', username: 'Dev3', email: 'dev3@example.com', role: 'member' as Role },
     ]
   });
 
@@ -68,7 +68,7 @@ export default function UsersPage() {
             className="bg-white rounded-3xl p-6 shadow-xl shadow-gray-200/50 border border-gray-100 group hover:y-[-5px] transition-all"
           >
             <div className="flex justify-between items-start mb-6">
-              <div className={`h-14 w-14 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg ${user.role === 'ADMIN' ? 'bg-gradient-to-br from-indigo-600 to-blue-500 shadow-blue-200' : 'bg-gradient-to-br from-gray-600 to-gray-400 shadow-gray-200'}`}>
+              <div className={`h-14 w-14 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg ${user.role === 'admin' ? 'bg-gradient-to-br from-indigo-600 to-blue-500 shadow-blue-200' : 'bg-gradient-to-br from-gray-600 to-gray-400 shadow-gray-200'}`}>
                 {user.username[0].toUpperCase()}
               </div>
               <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-xl transition-colors">
@@ -86,7 +86,7 @@ export default function UsersPage() {
               </div>
 
               <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                <span className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${user.role === 'ADMIN' ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-600'}`}>
+                <span className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${user.role === 'admin' ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-600'}`}>
                   <Shield className="h-3 w-3" />
                   {user.role}
                 </span>
