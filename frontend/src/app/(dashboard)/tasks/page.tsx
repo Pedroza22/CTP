@@ -12,18 +12,23 @@ import { useTasks } from '@/lib/hooks/useTasks';
 import { useProjects } from '@/lib/hooks/useProjects';
 import { Task } from '@/lib/types';
 import { TaskFormValues } from '@/lib/validations/task';
+import { Trash2 } from 'lucide-react';
 
 export default function TasksPage() {
   const [view, setView] = useState<'list' | 'kanban'>('kanban');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
   
-  const { tasks, isLoading, createTask, updateTask, isCreating, isUpdating } = useTasks();
+  const { tasks, isLoading, createTask, updateTask, deleteTask, isCreating, isUpdating } = useTasks();
   const { projects } = useProjects();
 
   const handleCreateTask = async (data: TaskFormValues) => {
     try {
-      await createTask(data);
+      const payload = {
+        ...data,
+        due_date: data.due_date || null
+      };
+      await createTask(payload);
       setIsModalOpen(false);
     } catch (e) {
       console.error(e);
@@ -33,7 +38,24 @@ export default function TasksPage() {
   const handleUpdateTask = async (data: TaskFormValues) => {
     if (selectedTask) {
       try {
-        await updateTask({ id: selectedTask.id, ...data });
+        // Ensure due_date is null if empty string
+        const payload = {
+          ...data,
+          due_date: data.due_date || null
+        };
+        await updateTask({ id: selectedTask.id, ...payload });
+        setIsModalOpen(false);
+        setSelectedTask(undefined);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  const handleDeleteTask = async (id: string) => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+      try {
+        await deleteTask(id);
         setIsModalOpen(false);
         setSelectedTask(undefined);
       } catch (e) {
@@ -140,6 +162,13 @@ export default function TasksPage() {
                 setSelectedTask({ status } as Task);
                 setIsModalOpen(true);
               }}
+              onTaskMove={async (taskId, newStatus) => {
+                try {
+                  await updateTask({ id: taskId, status: newStatus });
+                } catch (e) {
+                  console.error('Error updating task status:', e);
+                }
+              }}
             />
           )}
         </>
@@ -158,7 +187,16 @@ export default function TasksPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div className="p-6 bg-gray-50 rounded-3xl border border-gray-100">
-                <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Información Principal</h4>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Información Principal</h4>
+                  <button 
+                    onClick={() => handleDeleteTask(selectedTask.id)}
+                    className="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Eliminar
+                  </button>
+                </div>
                 <TaskForm
                   initialData={selectedTask}
                   projects={projects}

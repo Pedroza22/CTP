@@ -21,11 +21,14 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             username=validated_data['username'],
             password=validated_data['password'],
-            role=validated_data.get('role', User.MEMBER)
+            role=validated_data.get('role', User.MEMBER),
+            is_active=False  # Requerir verificación de email
         )
         return user
 
 class UserUpdateSerializer(serializers.ModelSerializer):
+    avatar_url = serializers.ImageField(required=False, allow_null=True)
+    
     class Meta:
         model = User
         fields = ('username', 'avatar_url')

@@ -88,7 +88,7 @@ export function CommentSection({ taskId }: CommentSectionProps) {
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Escribe un comentario..."
-          className="w-full rounded-2xl border-gray-200 border-2 p-4 pr-12 text-sm focus:border-blue-500 focus:ring-0 transition-all min-h-[100px] resize-none"
+          className="w-full rounded-2xl border-gray-200 border-2 p-4 pr-12 text-sm focus:border-blue-500 focus:ring-0 transition-all min-h-[100px] resize-none text-gray-900 bg-white placeholder-gray-400"
         />
         <button
           type="submit"
@@ -115,7 +115,7 @@ export function CommentSection({ taskId }: CommentSectionProps) {
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm font-bold text-gray-900">{comment.user_detail.username}</span>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase flex items-center gap-1">
+                  <span className="text-[10px] font-bold text-gray-500 uppercase flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     {new Date(comment.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>

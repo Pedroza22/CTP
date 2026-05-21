@@ -80,6 +80,46 @@ export default function RegisterPage() {
               {...register('password')}
             />
 
+            <Input
+              label="Confirmar contraseña"
+              type="password"
+              placeholder="••••••••"
+              error={errors.confirmPassword?.message}
+              {...register('confirmPassword')}
+            />
+
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="acceptTerms"
+                    type="checkbox"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors cursor-pointer"
+                    {...register('acceptTerms')}
+                  />
+                </div>
+                <div className="ml-3 text-xs">
+                  <label htmlFor="acceptTerms" className="font-medium text-gray-700 cursor-pointer">
+                    Acepto el <span className="text-blue-600 font-bold">tratamiento de datos personales</span> conforme a la <span className="font-bold">Ley 1581 de 2012</span> (Habeas Data) y la <span className="font-bold">normativa ISO/IEC 27001</span>.
+                  </label>
+                  {errors.acceptTerms && (
+                    <p className="mt-1 text-red-600 font-bold uppercase tracking-tighter">{errors.acceptTerms.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-2">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Requisitos de seguridad:</p>
+                <ul className="text-[10px] space-y-1 font-medium text-gray-500 list-disc pl-4">
+                  <li className={errors.password?.message?.includes('8 caracteres') ? 'text-red-500' : ''}>Mínimo 8 caracteres</li>
+                  <li className={errors.password?.message?.includes('mayúscula') ? 'text-red-500' : ''}>Al menos una mayúscula</li>
+                  <li className={errors.password?.message?.includes('minúscula') ? 'text-red-500' : ''}>Al menos una minúscula</li>
+                  <li className={errors.password?.message?.includes('número') ? 'text-red-500' : ''}>Al menos un número</li>
+                  <li className={errors.password?.message?.includes('carácter especial') ? 'text-red-500' : ''}>Al menos un carácter especial</li>
+                </ul>
+              </div>
+            </div>
+
             {registerError && (
               <motion.div 
                 initial={{ opacity: 0, x: -10 }}

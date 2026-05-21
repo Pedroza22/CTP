@@ -11,7 +11,9 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { TaskForm } from '@/components/tasks/TaskForm';
+import { CommentSection } from '@/components/tasks/CommentSection';
 import { TaskFormValues } from '@/lib/validations/task';
+import { Trash2 } from 'lucide-react';
 import api from '@/lib/api';
 
 export default function ProjectDetailPage() {
@@ -21,19 +23,41 @@ export default function ProjectDetailPage() {
 
   const { useProjectDetail } = useProjects();
   const { data: project, isLoading: isLoadingProject } = useProjectDetail(projectId);
-  const { tasks, isLoading: isLoadingTasks, createTask, isCreating } = useTasks(projectId);
+  const { tasks, isLoading: isLoadingTasks, createTask, updateTask, deleteTask, isCreating, isUpdating } = useTasks(projectId);
   
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<Task['status']>('pending');
+  const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
 
   const handleAddTask = (status: Task['status']) => {
-    setSelectedStatus(status);
+    setSelectedTask({ status, project: projectId } as Task);
     setIsTaskModalOpen(true);
   };
 
   const handleCreateTask = async (data: TaskFormValues) => {
-    await createTask({ ...data, project: projectId, status: selectedStatus });
+    await createTask(data);
     setIsTaskModalOpen(false);
+    setSelectedTask(undefined);
+  };
+
+  const handleUpdateTask = async (data: TaskFormValues) => {
+    if (selectedTask?.id) {
+      await updateTask({ id: selectedTask.id, ...data });
+      setIsTaskModalOpen(false);
+      setSelectedTask(undefined);
+    }
+  };
+
+  const handleTaskClick = (task: Task) => {
+    setSelectedTask(task);
+    setIsTaskModalOpen(true);
+  };
+
+  const handleTaskMove = async (taskId: string, newStatus: Task['status']) => {
+    try {
+      await updateTask({ id: taskId, status: newStatus });
+    } catch (error) {
+      console.error('Error moving task:', error);
+    }
   };
 
   const handleExportPDF = async () => {
@@ -111,10 +135,11 @@ export default function ProjectDetailPage() {
             </div>
           ) : (
             <KanbanBoard 
-              tasks={tasks} 
-              onAddTask={handleAddTask}
-              onTaskClick={(task) => console.log('Task clicked', task)}
-            />
+          tasks={tasks} 
+          onTaskClick={handleTaskClick}
+          onAddTask={handleAddTask}
+          onTaskMove={handleTaskMove}
+        />
           )}
         </div>
 
@@ -167,14 +192,51 @@ export default function ProjectDetailPage() {
 
       <Modal
         isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
-        title="Crear Nueva Tarea"
+        onClose={() => {
+          setIsTaskModalOpen(false);
+          setSelectedTask(undefined);
+        }}
+        title={selectedTask?.id ? 'Detalles de la Tarea' : 'Nueva Tarea'}
+        size={selectedTask?.id ? 'xl' : 'md'}
       >
-        <TaskForm 
-          onSubmit={handleCreateTask}
-          isLoading={isCreating}
-          initialData={{ status: selectedStatus }}
-        />
+        {selectedTask?.id ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <div className="p-6 bg-gray-50 rounded-3xl border border-gray-100">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Información Principal</h4>
+                  <button 
+                    onClick={async () => {
+                      if (window.confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+                        await deleteTask(selectedTask.id);
+                        setIsTaskModalOpen(false);
+                        setSelectedTask(undefined);
+                      }
+                    }}
+                    className="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Eliminar
+                  </button>
+                </div>
+                <TaskForm
+                  initialData={selectedTask}
+                  projects={[]} // No necesario si ya estamos en un proyecto
+                  onSubmit={handleUpdateTask}
+                />
+              </div>
+            </div>
+            <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
+              <CommentSection taskId={selectedTask.id} />
+            </div>
+          </div>
+        ) : (
+          <TaskForm
+            initialData={selectedTask}
+            onSubmit={handleCreateTask}
+            isLoading={isCreating}
+          />
+        )}
       </Modal>
     </div>
   );

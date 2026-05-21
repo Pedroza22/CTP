@@ -21,7 +21,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
     formState: { errors },
   } = useForm<ProjectFormValues>({
     resolver: zodResolver(projectSchema),
-    values: {
+    defaultValues: {
       name: initialData?.name || '',
       description: initialData?.description || '',
       start_date: initialData?.start_date || '',
@@ -44,7 +44,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
         <label className="block text-sm font-bold text-gray-700 mb-1 uppercase tracking-widest text-[10px]">Descripción</label>
         <textarea
           className={cn(
-            'block w-full rounded-xl border-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3 transition-all',
+            'block w-full rounded-xl border-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3 transition-all text-gray-900 bg-white placeholder-gray-400',
             errors.description ? 'border-red-300' : 'border-gray-200'
           )}
           rows={4}
@@ -75,7 +75,7 @@ export function ProjectForm({ initialData, onSubmit, isLoading }: ProjectFormPro
       <div>
         <label className="block text-sm font-bold text-gray-700 mb-1 uppercase tracking-widest text-[10px]">Estado</label>
         <select
-          className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2.5 transition-all"
+          className="block w-full rounded-xl border-2 border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2.5 transition-all text-gray-900 bg-white"
           {...register('status')}
         >
           <option value="active">Activo</option>

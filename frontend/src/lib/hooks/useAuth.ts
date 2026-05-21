@@ -38,8 +38,11 @@ export function useAuth() {
   });
 
   const profileUpdateMutation = useMutation({
-    mutationFn: async (data: Partial<User>) => {
-      const response = await api.patch('/auth/me/', data);
+    mutationFn: async (data: Partial<User> | FormData) => {
+      const headers = data instanceof FormData 
+        ? { 'Content-Type': 'multipart/form-data' }
+        : {};
+      const response = await api.patch('/auth/me/', data, { headers });
       return response.data;
     },
     onSuccess: (updatedUser: User) => {
