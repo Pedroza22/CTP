@@ -18,14 +18,14 @@ export function Navbar() {
           </div>
           <input
             type="text"
-            className="block w-full rounded-2xl border-0 bg-gray-50 py-2.5 pl-11 pr-4 text-gray-900 ring-1 ring-inset ring-transparent placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm transition-all"
+            className="block w-full rounded-2xl border-0 bg-gray-50 py-2.5 pl-11 pr-4 text-gray-900 ring-1 ring-inset ring-transparent placeholder-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm transition-all"
             placeholder="Buscar proyectos, tareas..."
           />
         </div>
       </div>
       <div className="flex items-center space-x-6">
         <NotificationBell />
-        <Link href="/users" className="flex items-center space-x-4 pl-6 border-l border-gray-100 hover:bg-gray-50/50 p-2 rounded-2xl transition-all group">
+        <Link href="/profile" className="flex items-center space-x-4 pl-6 border-l border-gray-100 hover:bg-gray-50/50 p-2 rounded-2xl transition-all group">
           <div className="text-right hidden sm:block">
             <p className="text-sm font-black text-gray-900 group-hover:text-blue-600 transition-colors">{user?.username || 'Usuario'}</p>
             <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{user?.role || 'Miembro'}</p>
@@ -33,7 +33,12 @@ export function Navbar() {
           <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 p-0.5 shadow-lg shadow-blue-200 transition-transform group-hover:scale-105">
             <div className="h-full w-full rounded-[14px] bg-white flex items-center justify-center overflow-hidden relative">
               {user?.avatar_url ? (
-                <Image src={user.avatar_url} alt="Profile" fill className="object-cover" />
+                <Image 
+                  src={user.avatar_url.startsWith('http') ? user.avatar_url : `http://localhost:8000${user.avatar_url}`} 
+                  alt="Profile" 
+                  fill 
+                  className="object-cover" 
+                />
               ) : (
                 <User className="h-6 w-6 text-blue-600" />
               )}

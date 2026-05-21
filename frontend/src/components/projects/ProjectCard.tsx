@@ -5,9 +5,10 @@ import { cn } from '@/components/ui/Button';
 interface ProjectCardProps {
   project: Project;
   onClick?: () => void;
+  onEdit?: () => void;
 }
 
-export function ProjectCard({ project, onClick }: ProjectCardProps) {
+export function ProjectCard({ project, onClick, onEdit }: ProjectCardProps) {
   const statusConfig = {
     active: { label: 'Activo', color: 'bg-blue-100 text-blue-700', icon: Clock },
     completed: { label: 'Completado', color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
@@ -28,7 +29,13 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           <Icon className="w-3 h-3 mr-1.5" />
           {label}
         </span>
-        <button className="p-1 rounded-full text-gray-400 hover:bg-gray-50 transition-colors">
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit?.();
+          }}
+          className="p-1 rounded-full text-gray-400 hover:bg-gray-50 transition-colors"
+        >
           <MoreVertical className="w-5 h-5" />
         </button>
       </div>

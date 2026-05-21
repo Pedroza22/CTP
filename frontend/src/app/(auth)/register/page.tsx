@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -29,30 +30,31 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen bg-gray-50 flex-col justify-center py-6 sm:px-6 lg:px-8">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sm:mx-auto sm:w-full sm:max-w-md"
+        className="sm:mx-auto sm:w-full sm:max-w-2xl"
       >
-        <div className="flex justify-center">
-          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-xl shadow-blue-200">
-            <span className="text-white font-black text-2xl">PF</span>
+        <div className="flex justify-center -mb-8">
+          <div className="relative h-96 w-full scale-150">
+            <Image 
+              src="/logo1_black_text.png" 
+              alt="Precision Flow Logo" 
+              fill
+              sizes="(max-width: 768px) 100vw, 1000px"
+              className="object-contain"
+              priority
+            />
           </div>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-black tracking-tight text-gray-900">
-          Únete a <span className="text-blue-600">Precision Flow</span>
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-500 font-medium uppercase tracking-widest">
-          COMIENZA A GESTIONAR TUS PROYECTOS
-        </p>
       </motion.div>
 
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.1 }}
-        className="mt-8 sm:mx-auto sm:w-full sm:max-w-md"
+        className="mt-0 sm:mx-auto sm:w-full sm:max-w-md"
       >
         <div className="bg-white py-10 px-6 shadow-2xl shadow-gray-200/50 rounded-3xl sm:px-12 border border-gray-100">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -79,6 +81,46 @@ export default function RegisterPage() {
               error={errors.password?.message}
               {...register('password')}
             />
+
+            <Input
+              label="Confirmar contraseña"
+              type="password"
+              placeholder="••••••••"
+              error={errors.confirmPassword?.message}
+              {...register('confirmPassword')}
+            />
+
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="acceptTerms"
+                    type="checkbox"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors cursor-pointer"
+                    {...register('acceptTerms')}
+                  />
+                </div>
+                <div className="ml-3 text-xs">
+                  <label htmlFor="acceptTerms" className="font-medium text-gray-700 cursor-pointer">
+                    Acepto el <span className="text-blue-600 font-bold">tratamiento de datos personales</span> conforme a la <span className="font-bold">Ley 1581 de 2012</span> (Habeas Data) y la <span className="font-bold">normativa ISO/IEC 27001</span>.
+                  </label>
+                  {errors.acceptTerms && (
+                    <p className="mt-1 text-red-600 font-bold uppercase tracking-tighter">{errors.acceptTerms.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-2">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Requisitos de seguridad:</p>
+                <ul className="text-[10px] space-y-1 font-medium text-gray-500 list-disc pl-4">
+                  <li className={errors.password?.message?.includes('8 caracteres') ? 'text-red-500' : ''}>Mínimo 8 caracteres</li>
+                  <li className={errors.password?.message?.includes('mayúscula') ? 'text-red-500' : ''}>Al menos una mayúscula</li>
+                  <li className={errors.password?.message?.includes('minúscula') ? 'text-red-500' : ''}>Al menos una minúscula</li>
+                  <li className={errors.password?.message?.includes('número') ? 'text-red-500' : ''}>Al menos un número</li>
+                  <li className={errors.password?.message?.includes('carácter especial') ? 'text-red-500' : ''}>Al menos un carácter especial</li>
+                </ul>
+              </div>
+            </div>
 
             {registerError && (
               <motion.div 

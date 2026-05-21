@@ -1,12 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api';
 import { Task } from '../types';
+import { useAuthStore } from '../store/authStore';
 
 export function useTasks(projectId?: string) {
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuthStore();
 
   const tasksQuery = useQuery({
     queryKey: projectId ? ['tasks', { projectId }] : ['tasks'],
+    enabled: isAuthenticated,
     queryFn: async () => {
       const params = projectId ? { project: projectId } : {};
       const response = await api.get<Task[]>('/tasks/', { params });
