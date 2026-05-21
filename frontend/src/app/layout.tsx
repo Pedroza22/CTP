@@ -17,6 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Precision Flow - Sistema de Control de Proyectos",
   description: "Plataforma para la gestión eficiente de proyectos y tareas",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/logo_transparent.png",
+  },
 };
 
 export default function RootLayout({

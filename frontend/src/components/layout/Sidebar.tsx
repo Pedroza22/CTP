@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import { 
   LayoutDashboard, 
   Briefcase, 
@@ -31,8 +32,16 @@ export function Sidebar() {
 
   return (
     <div className="flex h-full w-64 flex-col bg-white border-r border-gray-200">
-      <Link href="/dashboard" className="flex h-16 items-center px-6 hover:bg-gray-50 transition-colors">
-        <span className="text-xl font-bold text-blue-600">Precision Flow</span>
+      <Link href="/dashboard" className="flex h-28 items-center px-2 hover:bg-gray-50 transition-colors border-b border-gray-100">
+        <div className="relative h-20 w-full">
+          <Image 
+            src="/logo1_transparent.png" 
+            alt="Precision Flow Logo" 
+            fill
+            sizes="256px"
+            className="object-contain"
+          />
+        </div>
       </Link>
       <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
         <nav className="mt-5 flex-1 space-y-1 px-2">

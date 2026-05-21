@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -29,30 +30,31 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen bg-gray-50 flex-col justify-center py-6 sm:px-6 lg:px-8">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sm:mx-auto sm:w-full sm:max-w-md"
+        className="sm:mx-auto sm:w-full sm:max-w-xl"
       >
-        <div className="flex justify-center">
-          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-xl shadow-blue-200">
-            <span className="text-white font-black text-2xl">PF</span>
+        <div className="flex justify-center -mb-4">
+          <div className="relative h-80 w-full scale-125">
+            <Image 
+              src="/logo1_transparent.png" 
+              alt="Precision Flow Logo" 
+              fill
+              sizes="(max-width: 768px) 100vw, 800px"
+              className="object-contain"
+              priority
+            />
           </div>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-black tracking-tight text-gray-900">
-          Únete a <span className="text-blue-600">Precision Flow</span>
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-500 font-medium uppercase tracking-widest">
-          COMIENZA A GESTIONAR TUS PROYECTOS
-        </p>
       </motion.div>
 
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.1 }}
-        className="mt-8 sm:mx-auto sm:w-full sm:max-w-md"
+        className="mt-0 sm:mx-auto sm:w-full sm:max-w-md"
       >
         <div className="bg-white py-10 px-6 shadow-2xl shadow-gray-200/50 rounded-3xl sm:px-12 border border-gray-100">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
