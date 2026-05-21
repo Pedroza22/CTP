@@ -66,3 +66,7 @@ Para acceder y probar las funcionalidades de la plataforma, utiliza las siguient
 ##  Gráfico de Arquitectura
 
 ![Arquitectura](image.png)
+
+## Despliegue en VERCEL
+<img width="1888" height="1065" alt="image" src="https://github.com/user-attachments/assets/8681b91c-f40d-45cc-aa05-6f9033e551ab" />
+
