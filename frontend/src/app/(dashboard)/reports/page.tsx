@@ -29,18 +29,21 @@ export default function ReportsPage() {
   const reports = [
     {
       title: 'Resumen Ejecutivo',
+      id: 'executive',
       description: 'Estado general de todos los proyectos activos, hitos alcanzados y riesgos detectados.',
       icon: TrendingUp,
       color: 'from-blue-600 to-indigo-500',
     },
     {
       title: 'Productividad de Tareas',
+      id: 'productivity',
       description: 'Métricas detalladas sobre la velocidad del equipo y tasas de completitud de tareas.',
       icon: BarChart3,
       color: 'from-emerald-600 to-teal-500',
     },
     {
       title: 'Distribución de Carga',
+      id: 'workload',
       description: 'Análisis de tareas asignadas por usuario y balance de responsabilidades.',
       icon: PieChart,
       color: 'from-amber-600 to-orange-500',
@@ -78,7 +81,7 @@ export default function ReportsPage() {
             <div className="grid grid-cols-2 gap-4 mt-auto">
               <Button 
                 variant="outline" 
-                onClick={() => downloadReport('pdf', report.title)}
+                onClick={() => downloadReport('pdf', report.id)}
                 className="rounded-2xl border-2 flex items-center justify-center gap-2 group/btn hover:border-red-500 hover:text-red-500 transition-all"
               >
                 <FileText className="h-4 w-4" />
@@ -86,7 +89,7 @@ export default function ReportsPage() {
               </Button>
               <Button 
                 variant="outline" 
-                onClick={() => downloadReport('excel', report.title)}
+                onClick={() => downloadReport('excel', report.id)}
                 className="rounded-2xl border-2 flex items-center justify-center gap-2 group/btn hover:border-green-500 hover:text-green-500 transition-all"
               >
                 <FileSpreadsheet className="h-4 w-4" />
