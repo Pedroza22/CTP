@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from './store/authStore';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api',
@@ -41,10 +42,12 @@ api.interceptors.response.use(
           
           return api(originalRequest);
         } catch {
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
+          useAuthStore.getState().logout();
           window.location.href = '/login';
         }
+      } else {
+        useAuthStore.getState().logout();
+        window.location.href = '/login';
       }
     }
     return Promise.reject(error);

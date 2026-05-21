@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'apps.notifications',
     'apps.audit',
     'apps.dashboard',
+    'apps.reports',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +87,19 @@ TEMPLATES = [
     },
 ]
 
+# WSGI application
 WSGI_APPLICATION = 'config.wsgi.application'
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Static files
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 
 # Database

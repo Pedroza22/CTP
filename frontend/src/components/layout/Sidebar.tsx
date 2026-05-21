@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import { 
   LayoutDashboard, 
   Briefcase, 
@@ -31,8 +32,17 @@ export function Sidebar() {
 
   return (
     <div className="flex h-full w-64 flex-col bg-white border-r border-gray-200">
-      <Link href="/dashboard" className="flex h-16 items-center px-6 hover:bg-gray-50 transition-colors">
-        <span className="text-xl font-bold text-blue-600">Precision Flow</span>
+      <Link href="/dashboard" className="flex h-44 items-center px-1 hover:bg-gray-50 transition-colors border-b border-gray-100">
+        <div className="relative h-40 w-full scale-125">
+          <Image 
+            src="/logo1_black_text.png" 
+            alt="Precision Flow Logo" 
+            fill
+            sizes="300px"
+            className="object-contain"
+            priority
+          />
+        </div>
       </Link>
       <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
         <nav className="mt-5 flex-1 space-y-1 px-2">
@@ -52,7 +62,7 @@ export function Sidebar() {
                 <item.icon
                   className={cn(
                     'mr-3 h-5 w-5 flex-shrink-0',
-                    isActive ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-500'
+                    isActive ? 'text-blue-600' : 'text-gray-500 group-hover:text-gray-700'
                   )}
                 />
                 {item.name}
@@ -66,7 +76,7 @@ export function Sidebar() {
           onClick={logout}
           className="group flex w-full items-center rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors"
         >
-          <LogOut className="mr-3 h-5 w-5 text-gray-400 group-hover:text-red-600" />
+          <LogOut className="mr-3 h-5 w-5 text-gray-500 group-hover:text-red-600" />
           Cerrar sesión
         </button>
       </div>

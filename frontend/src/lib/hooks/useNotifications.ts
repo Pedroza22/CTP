@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api';
+import { useAuthStore } from '../store/authStore';
 
 export interface Notification {
   id: number;
@@ -11,9 +12,11 @@ export interface Notification {
 
 export function useNotifications() {
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuthStore();
 
   const notificationsQuery = useQuery({
     queryKey: ['notifications'],
+    enabled: isAuthenticated,
     queryFn: async () => {
       try {
         const response = await api.get<Notification[]>('/notifications/');

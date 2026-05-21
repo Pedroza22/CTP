@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/providers/QueryProvider";
+import { CookieConsent } from "@/components/ui/CookieConsent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +17,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Precision Flow - Sistema de Control de Proyectos",
   description: "Plataforma para la gestión eficiente de proyectos y tareas",
+  icons: {
+    icon: [
+      { url: '/logo_transparent.png', type: 'image/png' },
+    ],
+    shortcut: '/logo_transparent.png',
+    apple: '/logo_transparent.png',
+  },
 };
 
 export default function RootLayout({
@@ -28,6 +36,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} h-full antialiased text-gray-900`}>
         <QueryProvider>
           {children}
+          <CookieConsent />
         </QueryProvider>
       </body>
     </html>

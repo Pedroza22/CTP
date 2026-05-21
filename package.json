@@ -2,12 +2,10 @@
   "name": "ctp-root",
   "private": true,
   "scripts": {
-    "dev": "cd frontend && npm run dev",
+    "dev": "cd frontend && npm run dev -- --turbo",
     "build": "cd frontend && npm run build",
     "install": "cd frontend && npm install",
     "start": "cd frontend && npm run start"
   },
-  "dependencies": {
-    "next": "^15.0.0"
-  }
+  "dependencies": {}
 }

@@ -1,12 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api';
 import { Project } from '../types';
+import { useAuthStore } from '../store/authStore';
 
 export function useProjects() {
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuthStore();
 
   const projectsQuery = useQuery({
     queryKey: ['projects'],
+    enabled: isAuthenticated,
     queryFn: async () => {
       const response = await api.get<Project[]>('/projects/');
       return response.data;
@@ -19,7 +22,7 @@ export function useProjects() {
       const response = await api.get<Project>(`/projects/${id}/`);
       return response.data;
     },
-    enabled: !!id,
+    enabled: !!id && isAuthenticated,
   });
 
   const createProjectMutation = useMutation({

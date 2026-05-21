@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
-import { User, Role } from '@/lib/types';
+import { User } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 import { 
   UserPlus, 
@@ -15,31 +15,72 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Modal } from '@/components/ui/Modal';
+import { UserForm } from '@/components/users/UserForm';
+import { useAuthStore } from '@/lib/store/authStore';
 
 export default function UsersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const { isAuthenticated } = useAuthStore();
 
-  const { data: users = [] } = useQuery({
+  const { data: users = [], isLoading: isUsersLoading } = useQuery({
     queryKey: ['users'],
+    enabled: isAuthenticated,
     queryFn: async () => {
-      // Intentar fetch real, si no devolver mocks
-      try {
-        const response = await api.get<User[]>('/auth/users/'); // Ajustar según backend
-        return response.data;
-      } catch {
-        return [
-          { id: '1', username: 'Julian', email: 'julian@example.com', role: 'admin' as Role },
-          { id: '2', username: 'Catalina', email: 'catalina@example.com', role: 'member' as Role },
-          { id: '3', username: 'Dev3', email: 'dev3@example.com', role: 'member' as Role },
-        ];
-      }
-    },
-    initialData: [
-      { id: '1', username: 'Julian', email: 'julian@example.com', role: 'admin' as Role },
-      { id: '2', username: 'Catalina', email: 'catalina@example.com', role: 'member' as Role },
-      { id: '3', username: 'Dev3', email: 'dev3@example.com', role: 'member' as Role },
-    ]
+      const response = await api.get<User[]>('/auth/management/');
+      return response.data;
+    }
   });
+
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await api.delete(`/auth/management/${id}/`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    }
+  });
+
+  const createMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
+      await api.post('/auth/register/', data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setIsModalOpen(false);
+    }
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Record<string, unknown> }) => {
+      await api.patch(`/auth/management/${id}/`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setIsModalOpen(false);
+      setSelectedUser(null);
+    }
+  });
+
+  const handleEditClick = (user: User) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  };
+
+  const handleAddClick = () => {
+    setSelectedUser(null);
+    setIsModalOpen(true);
+  };
+
+  if (isUsersLoading) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -50,7 +91,7 @@ export default function UsersPage() {
           </h1>
           <p className="mt-2 text-gray-500">Administra los accesos y roles de tu equipo.</p>
         </div>
-        <Button className="flex items-center gap-2 rounded-2xl shadow-lg shadow-blue-200" onClick={() => setIsModalOpen(true)}>
+        <Button className="flex items-center gap-2 rounded-2xl shadow-lg shadow-blue-200" onClick={handleAddClick}>
           <UserPlus className="h-4 w-4" />
           Añadir Usuario
         </Button>
@@ -90,10 +131,20 @@ export default function UsersPage() {
                 </span>
                 
                 <div className="flex gap-2">
-                  <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
+                  <button 
+                    onClick={() => handleEditClick(user)}
+                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                  >
                     <Edit2 className="h-4 w-4" />
                   </button>
-                  <button className="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all">
+                  <button 
+                    onClick={() => {
+                      if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+                        deleteMutation.mutate(user.id);
+                      }
+                    }}
+                    className="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                  >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
@@ -105,12 +156,23 @@ export default function UsersPage() {
 
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Añadir Nuevo Usuario"
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedUser(null);
+        }}
+        title={selectedUser ? 'Editar Usuario' : 'Añadir Nuevo Usuario'}
       >
-        <div className="text-center py-8">
-          <p className="text-gray-500 italic">El formulario de creación de usuarios estará disponible próximamente.</p>
-        </div>
+        <UserForm 
+          initialData={selectedUser} 
+          onSubmit={(data) => {
+            if (selectedUser) {
+              updateMutation.mutate({ id: selectedUser.id, data });
+            } else {
+              createMutation.mutate(data);
+            }
+          }}
+          isLoading={createMutation.isPending || updateMutation.isPending}
+        />
       </Modal>
     </div>
   );

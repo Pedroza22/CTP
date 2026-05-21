@@ -2,6 +2,8 @@ import { Task } from '@/lib/types';
 import { Calendar, MessageSquare, AlertCircle, Clock, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/components/ui/Button';
 import Image from 'next/image';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface TaskCardProps {
   task: Task;
@@ -9,6 +11,21 @@ interface TaskCardProps {
 }
 
 export function TaskCard({ task, onClick }: TaskCardProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ id: task.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
   const statusConfig = {
     pending: { label: 'Pendiente', color: 'bg-gray-100 text-gray-700', icon: Clock },
     in_progress: { label: 'En progreso', color: 'bg-blue-100 text-blue-700', icon: Clock },
@@ -28,15 +45,19 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
 
   return (
     <div 
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
       onClick={onClick}
-      className="bg-white rounded-2xl border border-gray-100 p-5 shadow-lg shadow-gray-200/30 hover:shadow-xl transition-all cursor-pointer group"
+      className="bg-white rounded-2xl border border-gray-100 p-5 shadow-lg shadow-gray-200/30 hover:shadow-xl transition-all cursor-grab active:cursor-grabbing group"
     >
       <div className="flex justify-between items-start mb-4">
         <span className={cn('px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center', color)}>
           <Icon className="w-3 h-3 mr-1" />
           {label}
         </span>
-        <span className={cn('px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest', priorityConfig[task.priority])}>
+        <span className={cn('px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest', priorityConfig[task.priority as keyof typeof priorityConfig])}>
           {task.priority}
         </span>
       </div>
@@ -60,7 +81,12 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
           
           <div className="h-6 w-6 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center overflow-hidden relative">
             {task.assigned_to_detail?.avatar_url ? (
-              <Image src={task.assigned_to_detail.avatar_url} alt={task.assigned_to_detail.username} fill className="object-cover" />
+              <Image 
+                src={task.assigned_to_detail.avatar_url.startsWith('http') ? task.assigned_to_detail.avatar_url : `http://localhost:8000${task.assigned_to_detail.avatar_url}`} 
+                alt={task.assigned_to_detail.username} 
+                fill 
+                className="object-cover" 
+              />
             ) : (
               <span className="text-[8px] font-black text-blue-600 uppercase">
                 {task.assigned_to_detail?.username.substring(0, 2)}

@@ -10,11 +10,14 @@ import { useProjects } from '@/lib/hooks/useProjects';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { ProjectFormValues } from '@/lib/validations/project';
+import { Project } from '@/lib/types';
+import { Trash2 } from 'lucide-react';
 
 export default function ProjectsPage() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { projects, isLoading, createProject, isCreating } = useProjects();
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const { projects, isLoading, createProject, isCreating, deleteProject, updateProject, isUpdating } = useProjects();
   const { user } = useAuth();
 
   const handleCreateProject = async (data: ProjectFormValues) => {
@@ -24,6 +27,32 @@ export default function ProjectsPage() {
     } catch (e) {
       console.error(e);
     }
+  };
+
+  const handleDeleteProject = async (id: string) => {
+    try {
+      await deleteProject(id);
+      setIsModalOpen(false);
+      setSelectedProject(null);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleUpdateProject = async (data: ProjectFormValues) => {
+    if (!selectedProject) return;
+    try {
+      await updateProject({ id: selectedProject.id, ...data });
+      setIsModalOpen(false);
+      setSelectedProject(null);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleEditProject = (project: Project) => {
+    setSelectedProject(project);
+    setIsModalOpen(true);
   };
 
   if (isLoading) {
@@ -68,6 +97,7 @@ export default function ProjectsPage() {
               key={project.id} 
               project={project} 
               onClick={() => router.push(`/projects/${project.id}`)}
+              onEdit={() => handleEditProject(project)}
             />
           ))}
         </div>
@@ -75,13 +105,39 @@ export default function ProjectsPage() {
 
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Nuevo Proyecto"
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedProject(null);
+        }}
+        title={selectedProject ? 'Editar Proyecto' : 'Nuevo Proyecto'}
       >
-        <ProjectForm 
-          onSubmit={handleCreateProject}
-          isLoading={isCreating}
-        />
+        {selectedProject ? (
+          <div className="space-y-6">
+            <div className="flex justify-end">
+              <button 
+                onClick={() => {
+                  if (confirm('¿Estás seguro de que deseas eliminar este proyecto?')) {
+                    handleDeleteProject(selectedProject.id);
+                  }
+                }}
+                className="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest"
+              >
+                <Trash2 className="h-4 w-4" />
+                Eliminar Proyecto
+              </button>
+            </div>
+            <ProjectForm 
+              initialData={selectedProject}
+              onSubmit={handleUpdateProject}
+              isLoading={isUpdating}
+            />
+          </div>
+        ) : (
+          <ProjectForm 
+            onSubmit={handleCreateProject}
+            isLoading={isCreating}
+          />
+        )}
       </Modal>
     </div>
   );
