@@ -1,15 +1,13 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { User } from '@/lib/types';
-import { registerSchema } from '@/lib/validations/auth';
 
 interface UserFormProps {
-  initialData?: Partial<User>;
-  onSubmit: (data: any) => void;
+  initialData?: User | null;
+  onSubmit: (data: Record<string, unknown>) => void;
   isLoading?: boolean;
 }
 
@@ -20,13 +18,12 @@ export function UserForm({ initialData, onSubmit, isLoading }: UserFormProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<any>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<Record<string, unknown>>({
     defaultValues: {
       username: initialData?.username || '',
       email: initialData?.email || '',
       role: initialData?.role || 'member',
-      password: '', 
+      password: '',
     },
   });
 

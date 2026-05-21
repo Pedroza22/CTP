@@ -23,7 +23,7 @@ export default function ProjectDetailPage() {
 
   const { useProjectDetail } = useProjects();
   const { data: project, isLoading: isLoadingProject } = useProjectDetail(projectId);
-  const { tasks, isLoading: isLoadingTasks, createTask, updateTask, deleteTask, isCreating, isUpdating } = useTasks(projectId);
+  const { tasks, isLoading: isLoadingTasks, createTask, updateTask, deleteTask, isCreating } = useTasks(projectId);
   
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);

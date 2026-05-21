@@ -104,7 +104,10 @@ export function KanbanBoard({ tasks: initialTasks, onTaskClick, onAddTask, onTas
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   useEffect(() => {
-    setTasks(initialTasks);
+    const timeout = setTimeout(() => {
+      setTasks(initialTasks);
+    }, 0);
+    return () => clearTimeout(timeout);
   }, [initialTasks]);
 
   const sensors = useSensors(
@@ -128,16 +131,14 @@ export function KanbanBoard({ tasks: initialTasks, onTaskClick, onAddTask, onTas
     const { active, over } = event;
     if (!over) return;
 
-    const activeId = active.id;
-    const overId = over.id;
-
-    if (activeId === overId) return;
+    const activeId = active.id as string;
+    const overId = over.id as string;
 
     const activeTaskObj = tasks.find((t) => t.id === activeId);
     if (!activeTaskObj) return;
 
     const overTaskObj = tasks.find((t) => t.id === overId);
-    const isOverAColumn = columns.some((col) => col.status === overId);
+    const isOverAColumn = columns.some((col) => col.status === (overId as unknown as Task['status']));
 
     if (overTaskObj) {
       if (activeTaskObj.status !== overTaskObj.status) {

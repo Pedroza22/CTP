@@ -17,7 +17,10 @@ export default function DashboardLayout({
 
   useEffect(() => {
     // Esperar a que Zustand recupere el estado del localStorage
-    setIsHydrated(true);
+    const timeout = setTimeout(() => {
+      setIsHydrated(true);
+    }, 0);
+    return () => clearTimeout(timeout);
   }, []);
 
   useEffect(() => {

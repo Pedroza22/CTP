@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
-import { User, Role } from '@/lib/types';
+import { User } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 import { 
   UserPlus, 
@@ -44,7 +44,7 @@ export default function UsersPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: Record<string, unknown>) => {
       await api.post('/auth/register/', data);
     },
     onSuccess: () => {
@@ -54,7 +54,7 @@ export default function UsersPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: any }) => {
+    mutationFn: async ({ id, data }: { id: string; data: Record<string, unknown> }) => {
       await api.patch(`/auth/management/${id}/`, data);
     },
     onSuccess: () => {
@@ -163,7 +163,7 @@ export default function UsersPage() {
         title={selectedUser ? 'Editar Usuario' : 'Añadir Nuevo Usuario'}
       >
         <UserForm 
-          initialData={selectedUser || {}} 
+          initialData={selectedUser} 
           onSubmit={(data) => {
             if (selectedUser) {
               updateMutation.mutate({ id: selectedUser.id, data });

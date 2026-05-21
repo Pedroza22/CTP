@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/Input';
 import { profileSchema, ProfileFormValues } from '@/lib/validations/profile';
 import { User, Camera, Shield, Mail, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import api from '@/lib/api';
 import Image from 'next/image';
 
 export default function ProfilePage() {
@@ -53,7 +52,7 @@ export default function ProfilePage() {
         formData.append('avatar', data.avatar);
       }
 
-      await updateProfile(formData as any);
+      await updateProfile(formData);
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
