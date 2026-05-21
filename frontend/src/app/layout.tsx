@@ -18,9 +18,11 @@ export const metadata: Metadata = {
   title: "Precision Flow - Sistema de Control de Proyectos",
   description: "Plataforma para la gestión eficiente de proyectos y tareas",
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/logo_transparent.png",
+    icon: [
+      { url: '/logo_transparent.png', type: 'image/png' },
+    ],
+    shortcut: '/logo_transparent.png',
+    apple: '/logo_transparent.png',
   },
 };
 

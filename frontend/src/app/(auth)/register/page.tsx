@@ -34,15 +34,15 @@ export default function RegisterPage() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sm:mx-auto sm:w-full sm:max-w-xl"
+        className="sm:mx-auto sm:w-full sm:max-w-2xl"
       >
-        <div className="flex justify-center -mb-4">
-          <div className="relative h-80 w-full scale-125">
+        <div className="flex justify-center -mb-8">
+          <div className="relative h-96 w-full scale-150">
             <Image 
-              src="/logo1_transparent.png" 
+              src="/logo1_black_text.png" 
               alt="Precision Flow Logo" 
               fill
-              sizes="(max-width: 768px) 100vw, 800px"
+              sizes="(max-width: 768px) 100vw, 1000px"
               className="object-contain"
               priority
             />

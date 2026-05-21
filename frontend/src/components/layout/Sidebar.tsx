@@ -32,14 +32,15 @@ export function Sidebar() {
 
   return (
     <div className="flex h-full w-64 flex-col bg-white border-r border-gray-200">
-      <Link href="/dashboard" className="flex h-28 items-center px-2 hover:bg-gray-50 transition-colors border-b border-gray-100">
-        <div className="relative h-20 w-full">
+      <Link href="/dashboard" className="flex h-44 items-center px-1 hover:bg-gray-50 transition-colors border-b border-gray-100">
+        <div className="relative h-40 w-full scale-125">
           <Image 
-            src="/logo1_transparent.png" 
+            src="/logo1_black_text.png" 
             alt="Precision Flow Logo" 
             fill
-            sizes="256px"
+            sizes="300px"
             className="object-contain"
+            priority
           />
         </div>
       </Link>
