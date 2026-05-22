@@ -31,10 +31,15 @@ export default function RegisterPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50 flex-col justify-center py-6 sm:px-6 lg:px-8">
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-100/50 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-100/50 rounded-full blur-3xl animate-pulse" />
+      </div>
+
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sm:mx-auto sm:w-full sm:max-w-2xl"
+        className="sm:mx-auto sm:w-full sm:max-w-2xl relative z-10 pointer-events-none"
       >
         <div className="flex justify-center -mb-8">
           <div className="relative h-96 w-full scale-150">
@@ -54,7 +59,7 @@ export default function RegisterPage() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.1 }}
-        className="mt-0 sm:mx-auto sm:w-full sm:max-w-md"
+        className="mt-0 sm:mx-auto sm:w-full sm:max-w-md relative z-20"
       >
         <div className="bg-white py-10 px-6 shadow-2xl shadow-gray-200/50 rounded-3xl sm:px-12 border border-gray-100">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
